@@ -1,12 +1,13 @@
-### Dojo Gamedev #2
+# Flags'n'Machines Design Doc
 
-Theme: Multiplayer racing game with capture the flag mechanics
-Language: C#
-Tags: 3D, Network, Racing game, Shaders, Gravity changes, Physics and AI, Admin commands
+**Theme**: Multiplayer racing game with capture the flag mechanics  
+**Engine / Language**: Godot Engine 3.3.1 / C#  
+**Tags**: 3D, Network, Racing game, Shaders, Gravity changes, Physics and AI, Admin commands
 
 ### Aesthetics
 
 - Racing game at third-person or first-person view, in a "small world" concept (like Micro Machines).
+- Really simple graphics, should run on most computers (and should be mobile and web friendly).
 
 ### Gameplay
 
