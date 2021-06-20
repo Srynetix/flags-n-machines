@@ -11,7 +11,22 @@ config_version=4
 [application]
 
 config/name="flags-n-machines"
+config/description="My upcoming open-source CTF driving game made with Godot Engine."
 config/icon="res://icon.png"
+config/quit_on_go_back=false
+
+[autoload]
+
+PlayerContext="*res://autoloads/PlayerContext.cs"
+
+[display]
+
+window/size/width=1280
+window/size/height=720
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [physics]
 

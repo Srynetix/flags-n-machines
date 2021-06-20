@@ -1,0 +1,99 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/fonts/OstrichSans-Medium.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/main-menu/SettingsMenu.cs" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 72
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 64
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 60
+font_data = ExtResource( 3 )
+
+[node name="SettingsMenu" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.101961, 0.101961, 0.101961, 1 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainMargin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="MainRows" type="VBoxContainer" parent="MainMargin"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1260.0
+margin_bottom = 700.0
+custom_constants/separation = 50
+
+[node name="TopColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_right = 1240.0
+margin_bottom = 96.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" parent="MainMargin/MainRows/TopColumn" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 96.0
+margin_bottom = 96.0
+Text = "chevron-left"
+
+[node name="SettingsTitle" type="Label" parent="MainMargin/MainRows/TopColumn"]
+margin_left = 1028.0
+margin_top = 23.0
+margin_right = 1240.0
+margin_bottom = 72.0
+size_flags_horizontal = 10
+custom_fonts/font = SubResource( 1 )
+text = "Settings"
+
+[node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_top = 146.0
+margin_right = 1240.0
+margin_bottom = 197.0
+
+[node name="ParameterRows" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn"]
+margin_right = 1240.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+
+[node name="PlayerName" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/ParameterRows"]
+margin_right = 1240.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+custom_constants/separation = 50
+
+[node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName"]
+margin_top = 3.0
+margin_right = 234.0
+margin_bottom = 47.0
+custom_fonts/font = SubResource( 2 )
+text = "Player name"
+
+[node name="Input" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName"]
+margin_left = 284.0
+margin_right = 1240.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 3 )
+align = 2
+placeholder_text = "Player"
+placeholder_alpha = 0.1
+caret_blink = true
