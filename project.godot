@@ -21,6 +21,7 @@ config/quit_on_go_back=false
 Logging="*res://autoloads/Logging.cs"
 KVStore="*res://autoloads/KVStore.cs"
 PlayerContext="*res://autoloads/PlayerContext.cs"
+CVars="*res://autoloads/CVars.cs"
 
 [display]
 

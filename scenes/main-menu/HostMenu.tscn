@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/main-menu/HostMenu.cs" type="Script" id=2]
@@ -9,7 +9,19 @@
 size = 72
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=2]
+size = 72
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 64
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 64
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=8]
 size = 72
 font_data = ExtResource( 3 )
 
@@ -17,15 +29,11 @@ font_data = ExtResource( 3 )
 size = 64
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=7]
-size = 64
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=6]
 size = 60
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=7]
 size = 64
 extra_spacing_top = 8
 extra_spacing_bottom = 8
@@ -102,7 +110,7 @@ margin_left = 472.0
 margin_right = 767.0
 margin_bottom = 49.0
 size_flags_horizontal = 4
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 2 )
 text = "Map selection"
 
 [node name="Values" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters/MapSelection"]
@@ -117,7 +125,8 @@ margin_right = 380.0
 margin_bottom = 117.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
+toggle_mode = true
 text = "Map 1"
 
 [node name="Map2" type="Button" parent="MainMargin/MainRows/MiddleColumn/Parameters/MapSelection/Values"]
@@ -126,8 +135,23 @@ margin_right = 810.0
 margin_bottom = 117.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
+toggle_mode = true
 text = "Map 2"
+
+[node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/Parameters/MapSelection/Values/Map2"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.360784, 0.360784, 0.360784, 1 )
+text = "Map 2
+Coming soon"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Map3" type="Button" parent="MainMargin/MainRows/MiddleColumn/Parameters/MapSelection/Values"]
 margin_left = 860.0
@@ -135,8 +159,22 @@ margin_right = 1240.0
 margin_bottom = 117.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 5 )
-text = "Map 3"
+custom_fonts/font = SubResource( 3 )
+disabled = true
+toggle_mode = true
+
+[node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/Parameters/MapSelection/Values/Map3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0.360784, 0.360784, 0.360784, 1 )
+text = "Map 3
+Coming soon"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MaxPlayersInput" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters"]
 margin_top = 266.0
@@ -148,7 +186,7 @@ custom_constants/separation = 20
 margin_top = 3.0
 margin_right = 239.0
 margin_bottom = 47.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 5 )
 text = "Max players"
 
 [node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/MaxPlayersInput"]
@@ -156,10 +194,11 @@ margin_left = 259.0
 margin_right = 1240.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 6 )
 align = 2
 placeholder_text = "32"
 placeholder_alpha = 0.2
+caret_blink = true
 
 [node name="PortInput" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters"]
 margin_top = 367.0
@@ -171,7 +210,7 @@ custom_constants/separation = 20
 margin_top = 3.0
 margin_right = 231.0
 margin_bottom = 47.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 5 )
 text = "Server port"
 
 [node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/PortInput"]
@@ -179,20 +218,22 @@ margin_left = 251.0
 margin_right = 1240.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 6 )
 align = 2
 placeholder_text = "13795"
 placeholder_alpha = 0.2
+caret_blink = true
 
 [node name="BottomColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
 margin_top = 614.0
 margin_right = 1240.0
 margin_bottom = 680.0
 
-[node name="SaveButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
+[node name="StartButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
 margin_left = 1115.0
 margin_right = 1240.0
 margin_bottom = 66.0
 size_flags_horizontal = 10
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 7 )
+disabled = true
 text = "Start"
