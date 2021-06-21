@@ -38,6 +38,7 @@ public class CVars: Node {
     private void _InitializeVars() {
         _RegisterVar("host_default_max_players", 8);
         _RegisterVar("host_default_server_port", 13795);
+        _RegisterVar("join_default_server_address", "127.0.0.1");
     }
 
     private void _RegisterVar(string name, object value) {

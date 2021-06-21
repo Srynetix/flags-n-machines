@@ -14,6 +14,7 @@ public class HostMenu : ColorRect
     public override void _Ready()
     {
         _StartButton = GetNode<Button>("MainMargin/MainRows/BottomColumn/StartButton");
+        _StartButton.Disabled = true;
 
         _MaxPlayers = GetNode<LineEdit>("MainMargin/MainRows/MiddleColumn/Parameters/MaxPlayersInput/Value");
         _MaxPlayers.Connect("text_changed", this, nameof(_ValidateLineEdit));
@@ -34,6 +35,8 @@ public class HostMenu : ColorRect
                 button.Connect("toggled", this, nameof(_SelectMap), new Array { button });
             }
         }
+
+        _UpdateForm();
     }
 
     public override void _Notification(int what)
@@ -77,7 +80,9 @@ public class HostMenu : ColorRect
                     var portStr = _ServerPort.Text;
                     var portInt = 0;
                     if (int.TryParse(portStr, out portInt)) {
-                        return true;
+                        if (portInt > 0) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -87,10 +92,6 @@ public class HostMenu : ColorRect
     }
 
     private void _UpdateForm() {
-        if (_CheckParametersValidation()) {
-            _StartButton.Disabled = false;
-        } else {
-            _StartButton.Disabled = true;
-        }
+        _StartButton.Disabled = !_CheckParametersValidation();
     }
 }

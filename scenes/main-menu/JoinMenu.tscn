@@ -9,15 +9,15 @@
 size = 72
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=2]
 size = 64
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=3]
 size = 60
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=4]
 size = 64
 extra_spacing_top = 8
 extra_spacing_bottom = 8
@@ -94,7 +94,7 @@ custom_constants/separation = 20
 margin_top = 3.0
 margin_right = 296.0
 margin_bottom = 47.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 text = "Server address"
 
 [node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/AddressInput"]
@@ -102,7 +102,7 @@ margin_left = 316.0
 margin_right = 1240.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 align = 2
 placeholder_text = "127.0.0.1"
 placeholder_alpha = 0.2
@@ -117,7 +117,7 @@ custom_constants/separation = 20
 margin_top = 3.0
 margin_right = 231.0
 margin_bottom = 47.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 text = "Server port"
 
 [node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/PortInput"]
@@ -125,7 +125,7 @@ margin_left = 251.0
 margin_right = 1240.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 align = 2
 placeholder_text = "13795"
 placeholder_alpha = 0.2
@@ -135,10 +135,10 @@ margin_top = 614.0
 margin_right = 1240.0
 margin_bottom = 680.0
 
-[node name="SaveButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
+[node name="StartButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
 margin_left = 1115.0
 margin_right = 1240.0
 margin_bottom = 66.0
 size_flags_horizontal = 10
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 4 )
 text = "Start"
