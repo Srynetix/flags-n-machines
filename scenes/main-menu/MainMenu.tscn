@@ -120,6 +120,6 @@ margin_right = 1240.0
 margin_bottom = 11.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 5 )
-text = "Made by @Srynetix with Godot Engine 3.3.1 - github.com/Srynetix/flags-n-machines"
+text = "Made by @Srynetix with Godot Engine 3.3.2 - github.com/Srynetix/flags-n-machines"
 align = 1
 valign = 1
