@@ -1,0 +1,144 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/fonts/OstrichSans-Medium.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/main-menu/JoinMenu.cs" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 72
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 64
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 60
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 64
+extra_spacing_top = 8
+extra_spacing_bottom = 8
+font_data = ExtResource( 2 )
+
+[node name="JoinMenu" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.101961, 0.101961, 0.101961, 1 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainMargin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainRows" type="VBoxContainer" parent="MainMargin"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1260.0
+margin_bottom = 700.0
+custom_constants/separation = 50
+
+[node name="TopColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_right = 1240.0
+margin_bottom = 96.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" parent="MainMargin/MainRows/TopColumn" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 96.0
+margin_bottom = 96.0
+Text = "chevron-left"
+
+[node name="SettingsTitle" type="Label" parent="MainMargin/MainRows/TopColumn"]
+margin_left = 1142.0
+margin_top = 23.0
+margin_right = 1240.0
+margin_bottom = 72.0
+size_flags_horizontal = 10
+custom_fonts/font = SubResource( 1 )
+text = "JOIN"
+
+[node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_top = 412.0
+margin_right = 1240.0
+margin_bottom = 564.0
+size_flags_vertical = 10
+
+[node name="Parameters" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn"]
+margin_right = 1240.0
+margin_bottom = 152.0
+size_flags_horizontal = 3
+custom_constants/separation = 50
+
+[node name="AddressInput" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters"]
+margin_right = 1240.0
+margin_bottom = 51.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/Parameters/AddressInput"]
+margin_top = 3.0
+margin_right = 296.0
+margin_bottom = 47.0
+custom_fonts/font = SubResource( 4 )
+text = "Server address"
+
+[node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/AddressInput"]
+margin_left = 316.0
+margin_right = 1240.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 5 )
+align = 2
+placeholder_text = "127.0.0.1"
+placeholder_alpha = 0.2
+
+[node name="PortInput" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters"]
+margin_top = 101.0
+margin_right = 1240.0
+margin_bottom = 152.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/Parameters/PortInput"]
+margin_top = 3.0
+margin_right = 231.0
+margin_bottom = 47.0
+custom_fonts/font = SubResource( 4 )
+text = "Server port"
+
+[node name="Value" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/Parameters/PortInput"]
+margin_left = 251.0
+margin_right = 1240.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 5 )
+align = 2
+placeholder_text = "13795"
+placeholder_alpha = 0.2
+
+[node name="BottomColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_top = 614.0
+margin_right = 1240.0
+margin_bottom = 680.0
+
+[node name="SaveButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
+margin_left = 1115.0
+margin_right = 1240.0
+margin_bottom = 66.0
+size_flags_horizontal = 10
+custom_fonts/font = SubResource( 6 )
+text = "Start"

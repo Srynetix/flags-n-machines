@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=1]
 [ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=2]
@@ -15,6 +15,12 @@ font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 60
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 64
+extra_spacing_top = 8
+extra_spacing_bottom = 8
 font_data = ExtResource( 3 )
 
 [node name="SettingsMenu" type="ColorRect"]
@@ -67,11 +73,12 @@ text = "Settings"
 [node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
 margin_top = 146.0
 margin_right = 1240.0
-margin_bottom = 197.0
+margin_bottom = 564.0
+size_flags_vertical = 3
 
 [node name="ParameterRows" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn"]
 margin_right = 1240.0
-margin_bottom = 51.0
+margin_bottom = 418.0
 size_flags_horizontal = 3
 
 [node name="PlayerName" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/ParameterRows"]
@@ -97,3 +104,16 @@ align = 2
 placeholder_text = "Player"
 placeholder_alpha = 0.1
 caret_blink = true
+
+[node name="BottomColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
+margin_top = 614.0
+margin_right = 1240.0
+margin_bottom = 680.0
+
+[node name="SaveButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
+margin_left = 1137.0
+margin_right = 1240.0
+margin_bottom = 66.0
+size_flags_horizontal = 10
+custom_fonts/font = SubResource( 4 )
+text = "Save"
