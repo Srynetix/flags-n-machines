@@ -3,17 +3,25 @@ using Godot;
 public class MainMenu : ColorRect
 {
     private IconTouchButton _SettingsButton;
+    private Label _PlayerName;
     private Button _JoinButton;
     private Button _HostButton;
 
     public override void _Ready()
     {
+        PlayerContext.GetInstance().ReadStore();
+
         _JoinButton = GetNode<Button>("MainMargin/MainRows/MiddleColumn/JoinButton");
+        _JoinButton.Connect("pressed", this, nameof(_OpenJoinMenu));
+
         _HostButton = GetNode<Button>("MainMargin/MainRows/MiddleColumn/HostButton");
+        _HostButton.Connect("pressed", this, nameof(_OpenHostMenu));
+
         _SettingsButton = GetNode<IconTouchButton>("MainMargin/MainRows/TopColumn/PlayerSection/SettingsButton");
         _SettingsButton.Connect(nameof(IconTouchButton.pressed), this, nameof(_OpenSettingsMenu));
-        _JoinButton.Connect("pressed", this, nameof(_OpenJoinMenu));
-        _HostButton.Connect("pressed", this, nameof(_OpenHostMenu));
+
+        _PlayerName = GetNode<Label>("MainMargin/MainRows/TopColumn/PlayerSection/PlayerName");
+        _PlayerName.Text = PlayerContext.GetInstance().PlayerName;
 
         // Enable go back on quit
         GetTree().SetQuitOnGoBack(true);
