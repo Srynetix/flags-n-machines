@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/nodetracer/NodeTracerUI.cs" type="Script" id=1]
+[ext_resource path="res://addons/nodetracer/assets/fonts/OfficeCodePro-Bold.otf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+outline_size = 1
+outline_color = Color( 0.329412, 0, 0.427451, 1 )
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="NodeTracerUI" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 0.12549 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainContainer" type="VBoxContainer" parent="Margin"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1270.0
+margin_bottom = 710.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 8
+
+[node name="NodeTitle" type="Label" parent="Margin/MainContainer"]
+margin_right = 1260.0
+margin_bottom = 21.0
+custom_fonts/font = SubResource( 1 )
+text = "NodeTitle"
+
+[node name="ParametersSection" type="MarginContainer" parent="Margin/MainContainer"]
+margin_top = 29.0
+margin_right = 1260.0
+margin_bottom = 700.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Parameters" type="VBoxContainer" parent="Margin/MainContainer/ParametersSection"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 1255.0
+margin_bottom = 666.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
