@@ -13,6 +13,8 @@
 
 [sub_resource type="DynamicFont" id=5]
 size = 12
+outline_size = 1
+outline_color = Color( 0, 0, 0, 0.501961 )
 use_filter = true
 font_data = ExtResource( 2 )
 
@@ -53,5 +55,6 @@ custom_styles/bg_focus = SubResource( 2 )
 custom_styles/selected = SubResource( 3 )
 custom_styles/bg = SubResource( 4 )
 custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 columns = 2
 select_mode = 1

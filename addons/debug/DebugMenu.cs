@@ -17,10 +17,6 @@ public class DebugMenu: MarginContainer {
         // Hide all
         _LogPanel.Visible = false;
         _NodeTracerSystem.Visible = false;
-
-        for (var i = 0; i < 50; ++i) {
-            _Logger.DebugM("_Ready", "DebugMenu is ready.");
-        }
     }
 
     public override void _Input(InputEvent @event) {
