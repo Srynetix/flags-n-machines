@@ -19,6 +19,8 @@ public class NodeTracer: Node
         if (Title == "") {
             Title = GetParent().GetPath().ToString();
         }
+
+        AddToGroup("NodeTracer");
     }
 
     public void TraceParameter(string name, object value) {

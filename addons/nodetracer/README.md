@@ -1,1 +1,0 @@
-# Node tracer for Godot Engine (3.2.3, C#)

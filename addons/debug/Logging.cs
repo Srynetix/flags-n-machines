@@ -12,11 +12,18 @@ public enum LogLevel {
     Critical
 }
 
+public class LogMessage: Godot.Object {
+    public LogLevel Level;
+    public string LoggerName;
+    public string Message;
+}
+
 public class Logging: Node {
     private static LogLevel DEFAULT_LOG_LEVEL = LogLevel.Debug;
 
     private static Dictionary<string, LogLevel> _Levels = new Dictionary<string, LogLevel>();
     private static Dictionary<string, Logging> _Loggers = new Dictionary<string, Logging>();
+    public static Array<LogMessage> Messages = new Array<LogMessage>();
 
     public Logging(): this("root") {}
     public Logging(string name) {
@@ -85,10 +92,20 @@ public class Logging: Node {
     }
 
     private void _Log(LogLevel level, params object[] values) {
+        Messages.Add(new LogMessage() {
+            Level = level,
+            LoggerName = Name,
+            Message = _FormatArgs(values)
+        });
         _ShowLogLine(level, _FormatLog(level, values));
     }
 
     private void _LogMethod(LogLevel level, string method, params object[] values) {
+        Messages.Add(new LogMessage() {
+            Level = level,
+            LoggerName = $"{Name}::{method}",
+            Message = _FormatArgs(values)
+        });
         _ShowLogLine(level, _FormatLogMethod(level, method, values));
     }
 

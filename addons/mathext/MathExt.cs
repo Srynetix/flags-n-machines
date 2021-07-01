@@ -16,7 +16,8 @@ public static class MathExt {
         return transform;
     }
 
-    public static Transform InterpolateAlignWithY(Transform transform, Vector3 newY) {
-        return transform.InterpolateWith(AlignWithY(transform, newY), 0.001f);
+    public static Transform InterpolateAlignWithY(Transform transform, Vector3 newY, float weight) {
+        var aligned = AlignWithY(transform, newY);
+        return transform.InterpolateWith(aligned, weight);
     }
 }

@@ -14,7 +14,7 @@ public class NodeTracerSystem : MarginContainer
 
     public override void _Ready()
     {
-        _Grid = GetNode<GridContainer>("Grid");
+        _Grid = GetNode<GridContainer>("Container/MarginContainer2/Grid");
     }
 
     public override void _Process(float delta)
