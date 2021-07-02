@@ -1,6 +1,6 @@
 using Godot;
 
-public class PlayerContext: Node {
+public class PlayerContext {
     private string PLAYER_CONTEXT_FILE = "user://player.json";
 
     public string PlayerName {
@@ -10,13 +10,11 @@ public class PlayerContext: Node {
 
     private static PlayerContext _GlobalInstance;
 
-    public PlayerContext() {
-        if (_GlobalInstance == null) {
-            _GlobalInstance = this;
-        }
-    }
-
     public static PlayerContext GetInstance() {
+        if (_GlobalInstance == null) {
+            _GlobalInstance = new PlayerContext();
+        }
+
         return _GlobalInstance;
     }
 
