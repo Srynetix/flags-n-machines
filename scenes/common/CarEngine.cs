@@ -1,7 +1,8 @@
 using Godot;
+using Godot.Collections;
 
 // Mostly implemented from https://kidscancode.org/godot_recipes/3d/kinematic_car/
-public class CarEngine : KinematicBody
+public class CarEngine : KinematicBody, ISynchronizable
 {
     // Public state
     public float Gravity = -1.0f;
@@ -197,5 +198,28 @@ public class CarEngine : KinematicBody
     public void ResetMovement() {
         _Acceleration = Vector3.Zero;
         _Velocity = Vector3.Zero;
+    }
+
+    public Dictionary<string, object> _NetworkSend() {
+        return new Dictionary<string, object>() {
+            { "transform", Transform },
+            { "drift_particles_enabled", _DriftParticles.Emitting }
+        };
+    }
+
+    public void _NetworkReceive(Dictionary<string, object> data) {
+        if (data.ContainsKey("transform")) {
+            var transform = data["transform"];
+            if (transform is Transform t) {
+                Transform = t;
+            }
+        }
+
+        if (data.ContainsKey("drift_particles_enabled")) {
+            var value = data["drift_particles_enabled"];
+            if (value is bool v) {
+                _DriftParticles.Emitting = v;
+            }
+        }
     }
 }
