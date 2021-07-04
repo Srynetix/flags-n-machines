@@ -1,7 +1,8 @@
 using Godot;
+using Godot.Collections;
 
 // Mostly implemented from https://kidscancode.org/godot_recipes/3d/kinematic_car/
-public class CarEngine : KinematicBody
+public class CarEngine : KinematicBody, ISynchronizable
 {
     // Public state
     public float Gravity = -1.0f;
@@ -19,16 +20,10 @@ public class CarEngine : KinematicBody
     public float TractionFast = 0.02f;
     public float JumpForce = 10.0f;
     public float AirControlVelocity = 10.0f;
+    public float AirControlSteerVelocity = 10.0f;
 
     // Toggles
     public bool JumpEnabled = true;
-
-    // Input
-    public float SteerLeftInput = 0;
-    public float SteerRightInput = 0;
-    public bool AccelerateInput = false;
-    public bool BrakeInput = false;
-    public bool JumpInput = false;
 
     // Internal state
     protected bool _Drifting = false;
@@ -40,19 +35,25 @@ public class CarEngine : KinematicBody
 
     // Child nodes
     public Position3D CameraTarget;
+    protected CarInputController _InputController;
     protected Spatial _Mesh;
     protected CPUParticles _DriftParticles;
     protected RayCast _FrontRay;
     protected RayCast _RearRay;
     protected NodeTracer _NodeTracer;
+    protected MeshInstance _FrontLeftWheel;
+    protected MeshInstance _FrontRightWheel;
 
     public override void _Ready()
     {
+        _InputController = GetNode<CarInputController>("InputController");
         _Mesh = GetNode<Spatial>("Mesh");
         _DriftParticles = GetNode<CPUParticles>("DriftParticles");
         _FrontRay = GetNode<RayCast>("FrontRay");
         _RearRay = GetNode<RayCast>("RearRay");
         _NodeTracer = GetNode<NodeTracer>("NodeTracer");
+        _FrontLeftWheel = GetNode<MeshInstance>("Mesh/wheel_standard3");
+        _FrontRightWheel = GetNode<MeshInstance>("Mesh/wheel_standard4");
 
         CameraTarget = GetNode<Position3D>("CameraTarget");
     }
@@ -82,9 +83,9 @@ public class CarEngine : KinematicBody
 
         var upVector = Transform.basis.y;
         if (_Jumping) {
-            _Velocity = MoveAndSlide(_Velocity, upVector, true);
+            _Velocity = MoveAndSlide(_Velocity, upVector, false);
         } else {
-            _Velocity = MoveAndSlideWithSnap(_Velocity, -Transform.basis.y, upVector, true);
+            _Velocity = MoveAndSlideWithSnap(_Velocity, -Transform.basis.y, upVector, false);
         }
 
         // Detect floor
@@ -112,23 +113,21 @@ public class CarEngine : KinematicBody
     }
 
     private void _GetInput(float delta) {
-        var turn = SteerLeftInput;
-        turn -= SteerRightInput;
+        var turn = _InputController.SteerLeft;
+        turn -= _InputController.SteerRight;
         _SteerAngle = turn * Mathf.Deg2Rad(SteeringLimit);
 
         var forwardTurn = 0;
-        if (AccelerateInput) {
+        if (_InputController.Accelerate) {
             forwardTurn += 1;
         }
-        if (BrakeInput) {
+        if (_InputController.Brake) {
             forwardTurn -= 1;
         }
         _ForwardSteerAngle = forwardTurn * Mathf.Deg2Rad(SteeringLimit);
 
-        var frontLeftWheel = GetNode<MeshInstance>("Mesh/wheel_standard3");
-        frontLeftWheel.Rotation = new Vector3(frontLeftWheel.Rotation.x, _SteerAngle * 2.0f, frontLeftWheel.Rotation.z);
-        var frontRightWheel = GetNode<MeshInstance>("Mesh/wheel_standard4");
-        frontRightWheel.Rotation = new Vector3(frontRightWheel.Rotation.x, _SteerAngle * 2.0f, frontRightWheel.Rotation.z);
+        _FrontLeftWheel.Rotation = new Vector3(_FrontLeftWheel.Rotation.x, _SteerAngle * 2.0f, _FrontLeftWheel.Rotation.z);
+        _FrontRightWheel.Rotation = new Vector3(_FrontRightWheel.Rotation.x, _SteerAngle * 2.0f, _FrontRightWheel.Rotation.z);
 
         var yRotation = Mathf.Clamp((_Mesh.Rotation.y * 0.95f) + (_SteerAngle * 4 * delta), -MaxCarSteeringLimit, MaxCarSteeringLimit);
         _Mesh.Rotation = new Vector3(_Mesh.Rotation.x, yRotation, _Mesh.Rotation.z);
@@ -136,16 +135,16 @@ public class CarEngine : KinematicBody
         if (IsOnFloor()) {
             // Handle acceleration
             _Acceleration = Vector3.Zero;
-            if (AccelerateInput) {
+            if (_InputController.Accelerate) {
                 _Acceleration = -Transform.basis.z * EnginePower;
-            } else if (BrakeInput) {
+            } else if (_InputController.Brake) {
                 _Acceleration = -Transform.basis.z * Braking;
             }
 
             // Handle jump
             if (_Jumping) {
                 _Jumping = false;
-            } else if (JumpEnabled && JumpInput && !_Jumping) {
+            } else if (JumpEnabled && _InputController.Jump && !_Jumping) {
                 _Velocity += Transform.basis.y * JumpForce;
                 _Jumping = true;
             }
@@ -154,7 +153,7 @@ public class CarEngine : KinematicBody
 
     private void _ApplyFriction(float delta) {
         // Make the car brake automatically at low speed (disable 'soap effect')
-        if (_Velocity.Length() < 0.2 && _Acceleration.Length() == 0) {
+        if (_Velocity.Length() < 1 && _Acceleration.Length() == 0) {
             _Velocity = Vector3.Zero;
         }
 
@@ -164,7 +163,7 @@ public class CarEngine : KinematicBody
     }
 
     private void _CalculateAirSteering(float delta) {
-        Rotate(Transform.basis.y, _SteerAngle * delta * AirControlVelocity);
+        Rotate(Transform.basis.y, _SteerAngle * delta * AirControlSteerVelocity);
         Rotate(Transform.basis.x, -_ForwardSteerAngle * delta * AirControlVelocity / 3);
     }
 
@@ -197,5 +196,52 @@ public class CarEngine : KinematicBody
     public void ResetMovement() {
         _Acceleration = Vector3.Zero;
         _Velocity = Vector3.Zero;
+    }
+
+    public Dictionary<string, object> _NetworkSend() {
+        return new Dictionary<string, object>() {
+            { "transform", Transform },
+            { "mesh_transform", _Mesh.Transform },
+            { "front_left_wheel_rot", _FrontLeftWheel.Rotation },
+            { "front_right_wheel_rot", _FrontRightWheel.Rotation },
+            { "drift_particles_enabled", _DriftParticles.Emitting }
+        };
+    }
+
+    public void _NetworkReceive(Dictionary<string, object> data) {
+        if (data.ContainsKey("transform")) {
+            var transform = data["transform"];
+            if (transform is Transform t) {
+                Transform = t;
+            }
+        }
+
+        if (data.ContainsKey("mesh_transform")) {
+            var transform = data["mesh_transform"];
+            if (transform is Transform t) {
+                _Mesh.Transform = t;
+            }
+        }
+
+        if (data.ContainsKey("drift_particles_enabled")) {
+            var value = data["drift_particles_enabled"];
+            if (value is bool v) {
+                _DriftParticles.Emitting = v;
+            }
+        }
+
+        if (data.ContainsKey("front_left_wheel_rot")) {
+            var value = data["front_left_wheel_rot"];
+            if (value is Vector3 v) {
+                _FrontLeftWheel.Rotation = v;
+            }
+        }
+
+        if (data.ContainsKey("front_right_wheel_rot")) {
+            var value = data["front_right_wheel_rot"];
+            if (value is Vector3 v) {
+                _FrontRightWheel.Rotation = v;
+            }
+        }
     }
 }

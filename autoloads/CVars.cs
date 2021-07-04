@@ -1,6 +1,4 @@
-using Godot;
-
-public class CVars: Node {
+public class CVars {
     public class UnknownCVarException: System.Exception {
         public UnknownCVarException(string name): base($"Unknown CVar: {name}") {}
     }
@@ -12,16 +10,16 @@ public class CVars: Node {
     private Logging _Logger;
 
     public CVars() {
-        if (_GlobalInstance == null) {
-            _GlobalInstance = this;
-        }
-
         _Logger = Logging.GetLogger("CVars");
         _Store = KVStore.GetInstance();
         _InitializeVars();
     }
 
     public static CVars GetInstance() {
+        if (_GlobalInstance == null) {
+            _GlobalInstance = new CVars();
+        }
+
         return _GlobalInstance;
     }
 

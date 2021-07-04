@@ -1,6 +1,6 @@
 using Godot;
 
-public class DebugMenu: MarginContainer {
+public class DebugMenu: CanvasLayer {
     private LogPanel _LogPanel;
     private NodeTracerSystem _NodeTracerSystem;
     private Logging _Logger;
@@ -11,8 +11,10 @@ public class DebugMenu: MarginContainer {
 
     public override void _Ready()
     {
-        _LogPanel = (LogPanel)GetNode("/root/LogPanel");
-        _NodeTracerSystem = (NodeTracerSystem)GetNode("/root/NodeTracerSystem");
+        _LogPanel = GD.Load<PackedScene>("res://addons/debug/logpanel/LogPanel.tscn").Instance<LogPanel>();
+        AddChild(_LogPanel);
+        _NodeTracerSystem = GD.Load<PackedScene>("res://addons/debug/nodetracer/NodeTracerSystem.tscn").Instance<NodeTracerSystem>();
+        AddChild(_NodeTracerSystem);
 
         // Hide all
         _LogPanel.Visible = false;
@@ -36,12 +38,10 @@ public class DebugMenu: MarginContainer {
     private void _ToggleNodeTracer() {
         _LogPanel.Visible = false;
         _NodeTracerSystem.Visible = !_NodeTracerSystem.Visible;
-        _Logger.DebugM("_ToggleNodeTracer", $"Node tracer visibility: {_NodeTracerSystem.Visible}");
     }
 
     private void _ToggleLogPanel() {
         _NodeTracerSystem.Visible = false;
         _LogPanel.Visible = !_LogPanel.Visible;
-        _Logger.DebugM("_ToggleLogPanel", $"Log panel visibility: {_LogPanel.Visible}");
     }
 }

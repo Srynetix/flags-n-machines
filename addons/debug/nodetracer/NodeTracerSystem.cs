@@ -22,7 +22,7 @@ public class NodeTracerSystem : MarginContainer
         foreach (NodeTracer node in GetTree().GetNodesInGroup("NodeTracer")) {
             var nodePath = node.GetPath();
             if (!_Tracers.ContainsKey(nodePath)) {
-                _Logger.DebugM("_Process", $"Registering NodeTracer '{node.Title}' at path '{nodePath}'");
+                _Logger.DebugM("_Process", $"Registering NodeTracer '{node.Title}'.");
                 _Tracers.Add(nodePath, node);
                 _CreateTracerUI(nodePath, node);
             } else {

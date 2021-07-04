@@ -10,6 +10,7 @@ public class NodeTracer: Node
 
     public NodeTracer(): this("") {}
     public NodeTracer(string name) {
+        Name = "NodeTracer";
         Title = name;
     }
 

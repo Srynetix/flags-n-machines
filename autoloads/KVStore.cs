@@ -1,20 +1,20 @@
 using Godot;
 using Godot.Collections;
 
-public class KVStore: Node {
+public class KVStore {
     private Dictionary<string, object> _Data = new Dictionary<string, object>();
     private static KVStore _GlobalInstance;
     private Logging _Logger;
 
     public KVStore() {
-        if (_GlobalInstance == null) {
-            _GlobalInstance = this;
-        }
-
         _Logger = Logging.GetLogger("KVStore");
     }
 
     public static KVStore GetInstance() {
+        if (_GlobalInstance == null) {
+            _GlobalInstance = new KVStore();
+        }
+
         return _GlobalInstance;
     }
 

@@ -16,14 +16,17 @@ public class LogMessage: Godot.Object {
     public LogLevel Level;
     public string LoggerName;
     public string Message;
+    public int PeerId;
 }
 
-public class Logging: Node {
+public class Logging: Godot.Object {
     private static LogLevel DEFAULT_LOG_LEVEL = LogLevel.Debug;
 
     private static Dictionary<string, LogLevel> _Levels = new Dictionary<string, LogLevel>();
     private static Dictionary<string, Logging> _Loggers = new Dictionary<string, Logging>();
     public static Array<LogMessage> Messages = new Array<LogMessage>();
+
+    public string Name;
 
     public Logging(): this("root") {}
     public Logging(string name) {
@@ -81,34 +84,6 @@ public class Logging: Node {
         return string.Join(" ", values.Select(p => p.ToString()).ToArray());
     }
 
-    private string _FormatLog(LogLevel level, params object[] values) {
-        var log_level = level.ToString().ToUpper();
-        return $"[{log_level}] [{Name}] {_FormatArgs(values)}";
-    }
-
-    private string _FormatLogMethod(LogLevel level, string method, params object[] values) {
-        var log_level = level.ToString().ToUpper();
-        return $"[{log_level}] [{Name}::{method}] {_FormatArgs(values)}";
-    }
-
-    private void _Log(LogLevel level, params object[] values) {
-        Messages.Add(new LogMessage() {
-            Level = level,
-            LoggerName = Name,
-            Message = _FormatArgs(values)
-        });
-        _ShowLogLine(level, _FormatLog(level, values));
-    }
-
-    private void _LogMethod(LogLevel level, string method, params object[] values) {
-        Messages.Add(new LogMessage() {
-            Level = level,
-            LoggerName = $"{Name}::{method}",
-            Message = _FormatArgs(values)
-        });
-        _ShowLogLine(level, _FormatLogMethod(level, method, values));
-    }
-
     private void _ShowLogLine(LogLevel level, string logLine) {
         var maxLevel = GetLogLevelForName(Name);
         if (level < maxLevel) {
@@ -120,6 +95,22 @@ public class Logging: Node {
         } else {
             GD.PrintErr(logLine);
         }
+    }
+
+    #region General log
+
+    private string _FormatLog(LogLevel level, params object[] values) {
+        var log_level = level.ToString().ToUpper();
+        return $"[{log_level}] [{Name}] {_FormatArgs(values)}";
+    }
+
+    private void _Log(LogLevel level, params object[] values) {
+        Messages.Add(new LogMessage() {
+            Level = level,
+            LoggerName = Name,
+            Message = _FormatArgs(values)
+        });
+        _ShowLogLine(level, _FormatLog(level, values));
     }
 
     public void Trace(params object[] values) {
@@ -146,6 +137,24 @@ public class Logging: Node {
         _Log(LogLevel.Critical, values);
     }
 
+    #endregion
+
+    #region Method log
+
+    private string _FormatLogMethod(LogLevel level, string method, params object[] values) {
+        var log_level = level.ToString().ToUpper();
+        return $"[{log_level}] [{Name}::{method}] {_FormatArgs(values)}";
+    }
+
+    private void _LogMethod(LogLevel level, string method, params object[] values) {
+        Messages.Add(new LogMessage() {
+            Level = level,
+            LoggerName = $"{Name}::{method}",
+            Message = _FormatArgs(values)
+        });
+        _ShowLogLine(level, _FormatLogMethod(level, method, values));
+    }
+
     public void TraceM(string method, params object[] values) {
         _LogMethod(LogLevel.Trace, method, values);
     }
@@ -169,4 +178,49 @@ public class Logging: Node {
     public void CriticalM(string method, params object[] values) {
         _LogMethod(LogLevel.Critical, method, values);
     }
+
+    #endregion
+
+    #region Network log
+
+    private string _FormatLogMethodNetwork(LogLevel level, int peerId, string method, params object[] values) {
+        var log_level = level.ToString().ToUpper();
+        return $"[{log_level}] [{Name}::{method}] *{peerId}* {_FormatArgs(values)}";
+    }
+
+    private void _LogMethodNetwork(LogLevel level, int peerId, string method, params object[] values) {
+        Messages.Add(new LogMessage() {
+            Level = level,
+            LoggerName = $"{Name}::{method}",
+            PeerId = peerId,
+            Message = _FormatArgs(values)
+        });
+        _ShowLogLine(level, _FormatLogMethodNetwork(level, peerId, method, values));
+    }
+
+    public void TraceMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Trace, peerId, method, values);
+    }
+
+    public void DebugMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Debug, peerId, method, values);
+    }
+
+    public void InfoMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Info, peerId, method, values);
+    }
+
+    public void WarnMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Warning, peerId, method, values);
+    }
+
+    public void ErrorMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Error, peerId, method, values);
+    }
+
+    public void CriticalMN(int peerId, string method, params object[] values) {
+        _LogMethodNetwork(LogLevel.Critical, peerId, method, values);
+    }
+
+    #endregion
 }

@@ -19,7 +19,19 @@ public class LogPanel: Control {
     public string _GenerateContent(Array<LogMessage> messages) {
         var sb = new StringBuilder();
         foreach (LogMessage message in messages) {
-            sb.AppendLine($"[b][color=yellow][{message.Level.ToString().ToUpper()}][/color][/b] [b][color=green][{message.LoggerName}][/color][b] {message.Message}");
+            sb.Append(
+                $"[b][color=yellow][{message.Level.ToString().ToUpper()}][/color][/b] "
+            );
+
+            if (message.PeerId > 0) {
+                sb.Append($"[b][color=blue]*{message.PeerId}*[/color][/b] ");
+            }
+
+            sb.Append(
+                $"[b][color=green][{message.LoggerName}][/color][b] "
+            );
+
+            sb.AppendLine(message.Message);
         }
         return sb.ToString();
     }
