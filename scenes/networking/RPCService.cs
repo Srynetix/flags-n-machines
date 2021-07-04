@@ -3,9 +3,14 @@ using Godot;
 public class RPCService: Node {
     public ClientRPC Client;
     public ServerRPC Server;
+    public SyncInput SyncInput;
 
     public RPCService() {
         Name = "RPCService";
+    }
+
+    public static RPCService GetInstance(SceneTree tree) {
+        return tree.Root.GetNode<RPCService>("RPCService");
     }
 
     public override void _Ready()
@@ -16,7 +21,10 @@ public class RPCService: Node {
         Server = new ServerRPC();
         AddChild(Server);
 
-        Client.LinkServerRPC(Server);
-        Server.LinkClientRPC(Client);
+        SyncInput = new SyncInput();
+        AddChild(SyncInput);
+
+        Client.LinkService(this);
+        Server.LinkService(this);
     }
 }

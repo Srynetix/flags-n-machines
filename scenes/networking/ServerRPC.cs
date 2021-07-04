@@ -1,16 +1,17 @@
 using Godot;
+using Godot.Collections;
 
 public class ServerRPC: Node {
     public Logging _Logger;
-    private ClientRPC _ClientRPC;
+    private RPCService _Service;
 
     public ServerRPC() {
         _Logger = Logging.GetLogger("ServerRPC");
         Name = "ServerRPC";
     }
 
-    public void LinkClientRPC(ClientRPC client) {
-        _ClientRPC = client;
+    public void LinkService(RPCService service) {
+        _Service = service;
     }
 
     public void Ping() {
@@ -19,12 +20,22 @@ public class ServerRPC: Node {
         RpcId(1, nameof(_Ping));
     }
 
+    public void SendInput(Dictionary<string, float> input) {
+        RpcUnreliableId(1, nameof(_SendInput), input);
+    }
+
+    [Master]
+    private void _SendInput(Dictionary<string, float> input) {
+        var peerId = GetTree().GetRpcSenderId();
+        _Service.SyncInput.UpdatePeerInput(peerId, input);
+    }
+
     [Master]
     private void _Ping() {
         var myId = GetTree().GetNetworkUniqueId();
         var peerId = GetTree().GetRpcSenderId();
 
         _Logger.DebugMN(myId, "_Ping", $"Ping request received from peer {peerId}.");
-        _ClientRPC.Pong(peerId);
+        _Service.Client.Pong(peerId);
     }
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://assets/fonts/OstrichSans-Medium.otf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=2]
@@ -22,9 +22,13 @@ size = 72
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=5]
-font_data = ExtResource( 2 )
+size = 32
+font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=6]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=7]
 use_filter = true
 font_data = ExtResource( 1 )
 
@@ -93,13 +97,13 @@ Text = "cog"
 [node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
 margin_top = 116.0
 margin_right = 1240.0
-margin_bottom = 648.0
+margin_bottom = 610.0
 size_flags_vertical = 3
 custom_constants/separation = 20
 
 [node name="HostButton" type="Button" parent="MainMargin/MainRows/MiddleColumn"]
 margin_right = 610.0
-margin_bottom = 532.0
+margin_bottom = 494.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )
@@ -108,25 +112,44 @@ text = "Host"
 [node name="JoinButton" type="Button" parent="MainMargin/MainRows/MiddleColumn"]
 margin_left = 630.0
 margin_right = 1240.0
-margin_bottom = 532.0
+margin_bottom = 494.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 4 )
 text = "Join"
 
 [node name="BottomColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
-margin_top = 668.0
+margin_top = 630.0
 margin_right = 1240.0
 margin_bottom = 680.0
 
-[node name="Footer" type="RichTextLabel" parent="MainMargin/MainRows/BottomColumn"]
+[node name="BottomRow" type="VBoxContainer" parent="MainMargin/MainRows/BottomColumn"]
 margin_right = 1240.0
-margin_bottom = 12.0
+margin_bottom = 50.0
 size_flags_horizontal = 3
-custom_fonts/bold_font = SubResource( 5 )
-custom_fonts/normal_font = SubResource( 6 )
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="TestButton" type="Button" parent="MainMargin/MainRows/BottomColumn/BottomRow"]
+margin_right = 1240.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 5 )
+text = "Tests"
+
+[node name="Footer" type="RichTextLabel" parent="MainMargin/MainRows/BottomColumn/BottomRow"]
+margin_top = 38.0
+margin_right = 1240.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+custom_fonts/bold_font = SubResource( 6 )
+custom_fonts/normal_font = SubResource( 7 )
 bbcode_enabled = true
 bbcode_text = "[center]Made by [b]Srynetix[/b] using [rainbow]Godot Engine 3.3.2[/rainbow] - [url]https://github.com/Srynetix/flags-n-machines[/url][/center]"
 text = "Made by Srynetix using Godot Engine 3.3.2 - https://github.com/Srynetix/flags-n-machines"
 fit_content_height = true
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}

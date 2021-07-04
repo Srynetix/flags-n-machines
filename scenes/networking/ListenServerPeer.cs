@@ -53,6 +53,11 @@ public class ListenServerPeer: Node {
         _SceneTree.Iteration(delta);
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        _SceneTree.InputEvent(@event);
+    }
+
     public override void _ExitTree()
     {
         _SceneTree.Finish();

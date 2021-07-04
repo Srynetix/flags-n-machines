@@ -6,6 +6,7 @@ public class MainMenu : ColorRect
     private Label _PlayerName;
     private Button _JoinButton;
     private Button _HostButton;
+    private Button _TestsButton;
 
     public override void _Ready()
     {
@@ -19,6 +20,9 @@ public class MainMenu : ColorRect
 
         _SettingsButton = GetNode<IconTouchButton>("MainMargin/MainRows/TopColumn/PlayerSection/SettingsButton");
         _SettingsButton.Connect(nameof(IconTouchButton.pressed), this, nameof(_OpenSettingsMenu));
+
+        _TestsButton = GetNode<Button>("MainMargin/MainRows/BottomColumn/BottomRow/TestButton");
+        _TestsButton.Connect("pressed", this, nameof(_OpenTests));
 
         _PlayerName = GetNode<Label>("MainMargin/MainRows/TopColumn/PlayerSection/PlayerName");
         _PlayerName.Text = PlayerContext.GetInstance().PlayerName;
@@ -40,5 +44,9 @@ public class MainMenu : ColorRect
     private void _OpenHostMenu() {
         GetTree().SetQuitOnGoBack(false);
         GetTree().ChangeScene("res://scenes/main-menu/HostMenu.tscn");
+    }
+
+    private void _OpenTests() {
+        GetTree().ChangeScene("res://scenes/tests/TestCar.tscn");
     }
 }

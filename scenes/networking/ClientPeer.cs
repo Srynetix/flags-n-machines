@@ -7,6 +7,7 @@ public class ClientPeer: Node {
     public string ServerAddress;
     public int ServerPort;
 
+    private RPCService _RPC;
     private Logging _Logger;
 
     public ClientPeer() {
@@ -26,6 +27,7 @@ public class ClientPeer: Node {
         peer.CreateClient(ServerAddress, ServerPort);
         GetTree().NetworkPeer = peer;
 
+        _RPC = RPCService.GetInstance(GetTree());
         _Logger.DebugM("_Ready", "Client is ready.");
     }
 
@@ -40,8 +42,8 @@ public class ClientPeer: Node {
     private void _ConnectedToServer() {
         _Logger.InfoM("_ConnectedToServer", "Connected to server.");
 
-        var rpc = GetNode<RPCService>("/root/RPCService");
-        rpc.Server.Ping();
+        _RPC.SyncInput.CreatePeerInput(GetTree().GetNetworkUniqueId());
+        _RPC.Server.Ping();
 
         EmitSignal(nameof(ConnectedToServer));
     }
@@ -58,5 +60,24 @@ public class ClientPeer: Node {
     public override void _ExitTree()
     {
         GetTree().NetworkPeer = null;
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        var myInput = _RPC.SyncInput.GetCurrentInput();
+        if (myInput != null) {
+            _RPC.Server.SendInput(myInput.GetInputState());
+        }
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey eventKey) {
+            if (eventKey.Pressed) {
+                if (eventKey.Scancode == (int)KeyList.F6) {
+                    GetTree().Root.PrintTreePretty();
+                }
+            }
+        }
     }
 }

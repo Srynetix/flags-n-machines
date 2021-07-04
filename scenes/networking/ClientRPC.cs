@@ -2,16 +2,19 @@ using Godot;
 using Godot.Collections;
 
 public class ClientRPC: Node {
+    [Signal]
+    public delegate void SpawnedFromServer(Node node);
+
     public Logging _Logger;
-    private ServerRPC _ServerRPC;
+    private RPCService _Service;
 
     public ClientRPC() {
         _Logger = Logging.GetLogger("ClientRPC");
         Name = "ClientRPC";
     }
 
-    public void LinkServerRPC(ServerRPC server) {
-        _ServerRPC = server;
+    public void LinkService(RPCService service) {
+        _Service = service;
     }
 
     public void Pong(int clientId) {
@@ -20,16 +23,16 @@ public class ClientRPC: Node {
         RpcId(clientId, nameof(_Pong));
     }
 
-    public void SpawnSynchronizedSceneTo(int clientId, NodePath parent, string scenePath, string guid) {
+    public void SpawnSynchronizedSceneTo(int clientId, NodePath parent, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
         var myId = GetTree().GetNetworkUniqueId();
-        _Logger.DebugMN(myId, "SpawnSynchronizedSceneTo", $"Sending scene spawn '{scenePath}' at parent '{parent}' with guid '{guid}' to client '{clientId}'.");
-        RpcId(clientId, nameof(_SpawnSynchronizedScene), parent, scenePath, guid);
+        _Logger.DebugMN(myId, "SpawnSynchronizedSceneTo", $"Sending scene spawn '{scenePath}' at parent '{parent}' with guid '{guid}' and owner '{ownerPeerId}' to client '{clientId}'.");
+        RpcId(clientId, nameof(_SpawnSynchronizedScene), parent, scenePath, guid, ownerPeerId, masterConfiguration);
     }
 
-    public void SpawnSynchronizedSceneBroadcast(NodePath parent, string scenePath, string guid) {
+    public void SpawnSynchronizedSceneBroadcast(NodePath parent, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
         var myId = GetTree().GetNetworkUniqueId();
-        _Logger.DebugMN(myId, "SpawnSynchronizedSceneBroadcast", $"Sending scene spawn '{scenePath}' at parent '{parent}' with guid '{guid}' to all clients.");
-        Rpc(nameof(_SpawnSynchronizedScene), parent, scenePath, guid);
+        _Logger.DebugMN(myId, "SpawnSynchronizedSceneBroadcast", $"Sending scene spawn '{scenePath}' at parent '{parent}' with guid '{guid}' and owner '{ownerPeerId}' to all clients.");
+        Rpc(nameof(_SpawnSynchronizedScene), parent, scenePath, guid, ownerPeerId, masterConfiguration);
     }
 
     public void SynchronizeNodeBroadcast(NodePath path, Dictionary<string, object> data) {
@@ -43,14 +46,21 @@ public class ClientRPC: Node {
     }
 
     [Remote]
-    private void _SpawnSynchronizedScene(NodePath parent, string scenePath, string guid) {
+    private void _SpawnSynchronizedScene(NodePath parent, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
         var parentNode = GetNode(parent);
         var childNode = GD.Load<PackedScene>(scenePath).Instance();
         childNode.Name = guid;
+        childNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(childNode);
 
+        foreach (var kv in masterConfiguration) {
+            childNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
+        }
+
         var myId = GetTree().GetNetworkUniqueId();
-        _Logger.DebugMN(myId, "_SpawnSynchronizedScene", $"Spawned scene '{scenePath}' at parent '{parent}' with GUID '{guid}'.");
+        _Logger.DebugMN(myId, "_SpawnSynchronizedScene", $"Spawned scene '{scenePath}' at parent '{parent}' with guid '{guid}' and owner '{ownerPeerId}'.");
+
+        EmitSignal(nameof(SpawnedFromServer), childNode);
     }
 
     [Remote]
