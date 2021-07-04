@@ -92,9 +92,14 @@ public class TestNetworking : Spatial
 
     private void _StartServerGame() {
         _Server.Connect(nameof(ServerPeer.PeerConnected), this, nameof(_ServerPeerConnected));
-        _Server.SpawnSynchronizedScene<Node>(
-            "/root/TestNetworking", "res://scenes/tests/TestLevel.tscn"
+        var node = _Server.SpawnSynchronizedScene<Node>(
+            "/root/TestNetworking", "res://scenes/tests/MapCSG.tscn"
         );
+
+        var limits = _Server.SpawnSynchronizedScene<LevelLimits>(
+            node.GetPath(), "res://scenes/tests/LevelLimits.tscn"
+        );
+        limits.Connect(nameof(LevelLimits.OutOfLimits), this, nameof(_NodeOutOfLimits));
     }
 
     private void _StartClientGame(int peerId) {
@@ -105,5 +110,15 @@ public class TestNetworking : Spatial
             }
         );
         car.Translate(car.Transform.basis.y * 10);
+    }
+
+    private void _NodeOutOfLimits(Node node) {
+        _Logger.DebugM("_NodeOutOfLimits", $"Node {node.GetPath()} is out of limits.");
+        if (node is Car car) {
+            car.ResetMovement();
+            car.Translation = new Vector3();
+            car.Rotation = new Vector3();
+            car.Translate(car.Transform.basis.y * 10);
+        }
     }
 }

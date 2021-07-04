@@ -47,6 +47,6 @@ public class MainMenu : ColorRect
     }
 
     private void _OpenTests() {
-        GetTree().ChangeScene("res://scenes/tests/TestCar.tscn");
+        GetTree().ChangeScene("res://scenes/main-menu/TestsMenu.tscn");
     }
 }

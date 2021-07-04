@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/tests/PrototypeMaterial.tres" type="Material" id=1]
+
+[node name="Map" type="Spatial"]
+
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 92 )
+use_collision = true
+width = 75.0
+height = 50.0
+depth = 250.0
+material = ExtResource( 1 )
+
+[node name="CSGSphere" type="CSGSphere" parent="CSGBox2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -92 )
+operation = 2
+use_collision = true
+radius = 20.0
+radial_segments = 24
+rings = 12
+material = ExtResource( 1 )
+
+[node name="CSGCylinder" type="CSGCylinder" parent="CSGBox2/CSGSphere"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 44 )
+radius = 5.0
+height = 50.0
+sides = 16
+material = ExtResource( 1 )
+
+[node name="CSGCylinder2" type="CSGCylinder" parent="CSGBox2/CSGSphere"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 94 )
+radius = 2.5
+height = 50.0
+sides = 16
+material = ExtResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="CSGBox2/CSGSphere/CSGCylinder2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 16.9853, 64.988, -9.00001 )
+width = 40.0
+height = 30.0
+depth = 80.0
+material = ExtResource( 1 )
+
+[node name="CSGCylinder3" type="CSGCylinder" parent="CSGBox2"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 7, 15, 106.697 )
+operation = 2
+radius = 18.0
+height = 38.0
+sides = 32
+material = ExtResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 24.5, 267 )
+use_collision = true
+width = 100.0
+height = 1.0
+depth = 100.0
+material = ExtResource( 1 )

@@ -20,6 +20,7 @@ public class CarEngine : KinematicBody, ISynchronizable
     public float TractionFast = 0.02f;
     public float JumpForce = 10.0f;
     public float AirControlVelocity = 10.0f;
+    public float AirControlSteerVelocity = 10.0f;
 
     // Toggles
     public bool JumpEnabled = true;
@@ -162,7 +163,7 @@ public class CarEngine : KinematicBody, ISynchronizable
     }
 
     private void _CalculateAirSteering(float delta) {
-        Rotate(Transform.basis.y, _SteerAngle * delta * AirControlVelocity);
+        Rotate(Transform.basis.y, _SteerAngle * delta * AirControlSteerVelocity);
         Rotate(Transform.basis.x, -_ForwardSteerAngle * delta * AirControlVelocity / 3);
     }
 
