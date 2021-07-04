@@ -13,6 +13,8 @@ class SynchronizedScenePath: Godot.Object {
 public class ServerPeer: Node {
     [Signal]
     public delegate void PeerConnected(int peerId);
+    [Signal]
+    public delegate void PeerDisconnected(int peerId);
 
     public int ServerPort;
     public int MaxPlayers;
@@ -56,6 +58,16 @@ public class ServerPeer: Node {
         return childNode;
     }
 
+    public void RemoveSynchronizedNode(Node node) {
+        var guid = node.Name;
+        var syncNode = _SynchronizedNodes[guid];
+        _SynchronizedNodes.Remove(guid);
+        _SynchronizedScenePaths.Remove(guid);
+
+        _RPC.Client.RemoveSynchronizedNodeBroadcast(node.GetPath());
+        node.QueueFree();
+    }
+
     public override void _Ready()
     {
         GetTree().Connect("network_peer_connected", this, nameof(_PeerConnected));
@@ -76,7 +88,7 @@ public class ServerPeer: Node {
         // Spawn existing scenes
         foreach (var kv in _SynchronizedScenePaths) {
             var syncScenePath = kv.Value;
-            _RPC.Client.SpawnSynchronizedSceneTo(peerId, syncScenePath.Parent, syncScenePath.ScenePath, syncScenePath.GUID, syncScenePath.OwnerPeerId, syncScenePath.MasterConfiguration);
+            _RPC.Client.SpawnSynchronizedSceneOn(peerId, syncScenePath.Parent, syncScenePath.ScenePath, syncScenePath.GUID, syncScenePath.OwnerPeerId, syncScenePath.MasterConfiguration);
         }
 
         EmitSignal(nameof(PeerConnected), peerId);
@@ -84,6 +96,9 @@ public class ServerPeer: Node {
 
     private void _PeerDisconnected(int peerId) {
         _Logger.DebugM("_PeerDisconnected", $"Peer {peerId} disconnected.");
+        _RPC.SyncInput.RemovePeerInput(peerId);
+
+        EmitSignal(nameof(PeerDisconnected), peerId);
     }
 
     private string _GenerateGUID() {

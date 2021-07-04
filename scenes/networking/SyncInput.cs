@@ -26,6 +26,13 @@ public class SyncInput: Node {
         _Logger.DebugM("CreatePeerInput", $"Created peer input for peer {peerId}.");
     }
 
+    public void RemovePeerInput(int peerId) {
+        if (_PlayerInputs.ContainsKey(peerId)) {
+            _PlayerInputs[peerId].QueueFree();
+            _PlayerInputs.Remove(peerId);
+        }
+    }
+
     public void UpdatePeerInput(int peerId, Dictionary<string, float> input) {
         _PlayerInputs[peerId].UpdateInput(input);
     }
@@ -40,7 +47,11 @@ public class SyncInput: Node {
                 return false;
             }
 
-            return _PlayerInputs[myId].IsActionPressed(actionName);
+            if (_PlayerInputs.ContainsKey(myId)) {
+                return _PlayerInputs[myId].IsActionPressed(actionName);
+            } else {
+                return false;
+            }
         }
     }
 
@@ -54,7 +65,11 @@ public class SyncInput: Node {
                 return 0;
             }
 
-            return _PlayerInputs[myId].GetActionStrength(actionName);
+            if (_PlayerInputs.ContainsKey(myId)) {
+                return _PlayerInputs[myId].GetActionStrength(actionName);
+            } else {
+                return 0;
+            }
         }
     }
 }

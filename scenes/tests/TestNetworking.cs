@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 
 public class TestNetworking : Spatial
 {
@@ -11,6 +12,8 @@ public class TestNetworking : Spatial
     private Logging _Logger;
     private ChaseCamera _Camera;
     private RPCService _RPC;
+
+    private Dictionary<int, Node> _Cars = new Dictionary<int, Node>();
 
     public TestNetworking() {
         _Logger = Logging.GetLogger("TestNetworking");
@@ -71,6 +74,13 @@ public class TestNetworking : Spatial
         _StartClientGame(peerId);
     }
 
+    private void _ServerPeerDisconnected(int peerId) {
+        if (_Cars.ContainsKey(peerId)) {
+            _Server.RemoveSynchronizedNode(_Cars[peerId]);
+            _Cars.Remove(peerId);
+        }
+    }
+
     private void _CreateListenServer() {
         _ListenServerButton.Disabled = true;
         _ServerButton.Disabled = true;
@@ -92,8 +102,10 @@ public class TestNetworking : Spatial
 
     private void _StartServerGame() {
         _Server.Connect(nameof(ServerPeer.PeerConnected), this, nameof(_ServerPeerConnected));
+        _Server.Connect(nameof(ServerPeer.PeerDisconnected), this, nameof(_ServerPeerDisconnected));
+
         var node = _Server.SpawnSynchronizedScene<Node>(
-            "/root/TestNetworking", "res://scenes/tests/MapCSG.tscn"
+            "/root/TestNetworking", "res://scenes/tests/TestLevel.tscn"
         );
 
         var limits = _Server.SpawnSynchronizedScene<LevelLimits>(
@@ -110,6 +122,7 @@ public class TestNetworking : Spatial
             }
         );
         car.Translate(car.Transform.basis.y * 10);
+        _Cars.Add(peerId, car);
     }
 
     private void _NodeOutOfLimits(Node node) {
