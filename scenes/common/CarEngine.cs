@@ -5,7 +5,7 @@ using Godot.Collections;
 public class CarEngine : KinematicBody, ISynchronizable
 {
     // Public state
-    public float Gravity = -1.0f;
+    public float Gravity = -40.0f;
     public float WheelBase = 0.6f;
     public float SteeringLimit = 10.0f;
     public float EnginePower = 12.0f;
@@ -78,7 +78,7 @@ public class CarEngine : KinematicBody, ISynchronizable
             gravityVector = Vector3.Up;
         }
 
-        _Acceleration += Gravity * gravityVector;
+        _Acceleration += Gravity * gravityVector * delta;
         _Velocity += _Acceleration * delta;
 
         var upVector = Transform.basis.y;
@@ -196,6 +196,10 @@ public class CarEngine : KinematicBody, ISynchronizable
     public void ResetMovement() {
         _Acceleration = Vector3.Zero;
         _Velocity = Vector3.Zero;
+    }
+
+    public CarInputController GetInputController() {
+        return _InputController;
     }
 
     public Dictionary<string, object> _NetworkSend() {

@@ -65,6 +65,7 @@ public class TestNetworking : Spatial
     private void _OnClientNodeSpawned(Node node) {
         if (node is Car car) {
             if (car.IsOwnedByCurrentPeer()) {
+                car.GetInputController().ShowVirtualControls();
                 _Camera.Target = car.CameraTarget;
             }
         }

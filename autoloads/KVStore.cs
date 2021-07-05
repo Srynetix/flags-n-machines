@@ -55,12 +55,14 @@ public class KVStore {
         var parse_result = JSON.Parse(line);
         if (parse_result.Error != Error.Ok) {
             _Logger.ErrorM("ReadStoreFromPath", $"Bad JSON value: '{line}'");
+        } else {
+            var data = (Dictionary)parse_result.Result;
+            foreach (var key in data.Keys) {
+                Store((string)key, data[key]);
+            }
         }
 
-        var data = (Dictionary)parse_result.Result;
-        foreach (var key in data.Keys) {
-            Store((string)key, data[key]);
-        }
+        file.Close();
     }
 
     public void SaveStoreToPath(string path) {
@@ -73,5 +75,6 @@ public class KVStore {
 
         _Logger.InfoM("SaveStoreToPath", $"Writing to file '{path}'.");
         file.StoreLine(JSON.Print(_Data));
+        file.Close();
     }
 }

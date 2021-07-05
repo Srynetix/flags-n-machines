@@ -15,6 +15,8 @@ public class TestCar : Spatial
         _WorldCamera = GetNode<Camera>("WorldCamera");
         _ChaseCamera = GetNode<ChaseCamera>("ChaseCamera");
         _ChaseCamera.Target = _Car.CameraTarget;
+
+        GetNode<LevelLimits>("LevelLimits").Connect(nameof(LevelLimits.OutOfLimits), this, nameof(_ResetCar));
     }
 
     public override void _Input(InputEvent @event)
@@ -22,8 +24,7 @@ public class TestCar : Spatial
         if (@event is InputEventKey eventKey) {
             if (eventKey.Pressed) {
                 if (eventKey.Scancode == ((uint)KeyList.Enter)) {
-                    _Car.ResetMovement();
-                    _Car.Transform = _InitialCarTransform;
+                    _ResetCar(_Car);
                 }
 
                 else if (eventKey.Scancode == ((uint)KeyList.Tab)) {
@@ -31,5 +32,16 @@ public class TestCar : Spatial
                 }
             }
         }
+    }
+
+    private void _OutOfLimits(Node node) {
+        if (node is Car car) {
+            _ResetCar(car);
+        }
+    }
+
+    private void _ResetCar(Car car) {
+        car.ResetMovement();
+        car.Transform = _InitialCarTransform;
     }
 }
