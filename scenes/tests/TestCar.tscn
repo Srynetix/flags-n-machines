@@ -150,4 +150,3 @@ depth = 24.0
 material = SubResource( 4 )
 
 [node name="LevelLimits" parent="." instance=ExtResource( 7 )]
-MonitoredNodes = [ NodePath("../Car") ]
