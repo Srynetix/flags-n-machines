@@ -29,6 +29,10 @@ public class ServerPeer: Node {
         Name = "ServerPeer";
     }
 
+    public Node SpawnSynchronizedScene(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+        return SpawnSynchronizedScene<Node>(parent, scenePath, ownerPeerId, masterConfiguration);
+    }
+
     public T SpawnSynchronizedScene<T>(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
         var nodeGuid = _GenerateGUID();
         var parentNode = GetNode(parent);
@@ -78,7 +82,7 @@ public class ServerPeer: Node {
         GetTree().NetworkPeer = peer;
 
         _RPC = RPCService.GetInstance(GetTree());
-        _Logger.DebugM("_Ready", "Server is ready.");
+        _Logger.DebugM("_Ready", $"Server started on port '{ServerPort}' for '{MaxPlayers}' players.");
     }
 
     private void _PeerConnected(int peerId) {

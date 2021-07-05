@@ -14,6 +14,7 @@ public class HostMenu : ColorRect
     public override void _Ready()
     {
         _StartButton = GetNode<Button>("MainMargin/MainRows/BottomColumn/StartButton");
+        _StartButton.Connect("pressed", this, nameof(_StartGame));
         _StartButton.Disabled = true;
 
         _MaxPlayers = GetNode<LineEdit>("MainMargin/MainRows/MiddleColumn/Parameters/MaxPlayersInput/Value");
@@ -65,6 +66,14 @@ public class HostMenu : ColorRect
         }
 
         _UpdateForm();
+    }
+
+    private void _StartGame() {
+        // Update parameters
+        CVars.GetInstance().SetVar<int>("host_server_port", int.Parse(_ServerPort.Text));
+        CVars.GetInstance().SetVar<int>("host_max_players", int.Parse(_MaxPlayers.Text));
+
+        GetTree().ChangeScene("res://scenes/main-menu/ServerLobby.tscn");
     }
 
     private void _ValidateLineEdit(string value) {

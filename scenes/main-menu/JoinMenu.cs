@@ -10,6 +10,7 @@ public class JoinMenu : ColorRect
     public override void _Ready()
     {
         _StartButton = GetNode<Button>("MainMargin/MainRows/BottomColumn/StartButton");
+        _StartButton.Connect("pressed", this, nameof(_StartGame));
         _StartButton.Disabled = true;
 
         _BackButton = GetNode<IconTouchButton>("MainMargin/MainRows/TopColumn/BackButton");
@@ -31,6 +32,14 @@ public class JoinMenu : ColorRect
         if (what == MainLoop.NotificationWmGoBackRequest) {
             _GoBack();
         }
+    }
+
+    private void _StartGame() {
+        // Update parameters
+        CVars.GetInstance().SetVar<string>("join_server_address", _ServerAddress.Text);
+        CVars.GetInstance().SetVar<int>("join_server_port", int.Parse(_ServerPort.Text));
+
+        GetTree().ChangeScene("res://scenes/main-menu/ClientLobby.tscn");
     }
 
     private void _ValidateLineEdit(string text) {

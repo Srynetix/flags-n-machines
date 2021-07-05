@@ -33,10 +33,18 @@ public class CVars {
         return (T)output;
     }
 
+    public void SetVar<T>(string name, T value) {
+        _Store.Store(name, value);
+    }
+
     private void _InitializeVars() {
         _RegisterVar("host_default_max_players", 8);
         _RegisterVar("host_default_server_port", 13795);
         _RegisterVar("join_default_server_address", "127.0.0.1");
+        _RegisterVar("host_max_players", 8);
+        _RegisterVar("host_server_port", 13795);
+        _RegisterVar("join_server_address", "127.0.0.1");
+        _RegisterVar("join_server_port", 13795);
     }
 
     private void _RegisterVar(string name, object value) {
