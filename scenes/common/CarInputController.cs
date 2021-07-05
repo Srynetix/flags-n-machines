@@ -7,6 +7,20 @@ public class CarInputController: Node {
     public bool Brake;
     public bool Jump;
 
+    private VirtualControls _VirtualControls;
+
+    public override void _Ready()
+    {
+        _VirtualControls = GetNode<VirtualControls>("VirtualControls");
+        if (NetworkExt.IsNetworkMaster(this)) {
+            _VirtualControls.Visible = true;
+        }
+    }
+
+    public void ShowVirtualControls() {
+        _VirtualControls.Visible = true;
+    }
+
     public override void _PhysicsProcess(float delta)
     {
         var syncInput = RPCService.GetInstance(GetTree()).SyncInput;

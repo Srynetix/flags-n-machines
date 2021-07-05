@@ -18,3 +18,4 @@ TargetPath = NodePath("../Car")
 
 [node name="LevelLimits" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 119 )
+MonitoredNodes = [ NodePath("../Car") ]
