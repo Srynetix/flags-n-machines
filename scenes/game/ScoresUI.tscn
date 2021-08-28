@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/game/ScoresUI.cs" type="Script" id=1]
+[ext_resource path="res://assets/themes/UITheme.tres" type="Theme" id=2]
+
+[node name="ScoresUI" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+custom_constants/margin_right = 100
+custom_constants/margin_top = 100
+custom_constants/margin_left = 100
+custom_constants/margin_bottom = 100
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.12549 )
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 1180.0
+margin_bottom = 620.0
+
+[node name="InnerMargin" type="MarginContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Row" type="VBoxContainer" parent="Panel/InnerMargin"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1070.0
+margin_bottom = 510.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Panel/InnerMargin/Row"]
+margin_right = 1060.0
+margin_bottom = 22.0
+text = "Scores"
+align = 1
+
+[node name="Rows" type="VBoxContainer" parent="Panel/InnerMargin/Row"]
+margin_top = 42.0
+margin_right = 1060.0
+margin_bottom = 42.0
+custom_constants/separation = 10

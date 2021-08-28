@@ -56,3 +56,6 @@
         - bot_add
         - bot_kick
 - Separate game logic from networking, using adapters
+
+### Game Master protocol
+

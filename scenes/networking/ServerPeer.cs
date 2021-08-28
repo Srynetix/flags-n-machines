@@ -4,6 +4,7 @@ using System;
 
 class SynchronizedScenePath: Godot.Object {
     public string GUID;
+    public string Name;
     public NodePath Parent;
     public string ScenePath;
     public int OwnerPeerId;
@@ -18,6 +19,7 @@ public class ServerPeer: Node {
 
     public int ServerPort;
     public int MaxPlayers;
+    private Dictionary<int, string> _Players = new Dictionary<int, string>();
 
     private RPCService _RPC;
     private Logging _Logger;
@@ -29,6 +31,10 @@ public class ServerPeer: Node {
         Name = "ServerPeer";
     }
 
+    public Dictionary<int, string> GetPlayers() {
+        return _Players;
+    }
+
     public Node SpawnSynchronizedScene(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
         return SpawnSynchronizedScene<Node>(parent, scenePath, ownerPeerId, masterConfiguration);
     }
@@ -37,7 +43,8 @@ public class ServerPeer: Node {
         var nodeGuid = _GenerateGUID();
         var parentNode = GetNode(parent);
         var childNode = GD.Load<PackedScene>(scenePath).Instance<T>();
-        childNode.Name = nodeGuid;
+        var name = childNode.Name;
+        childNode.Name = GenerateNetworkName(childNode.Name, nodeGuid);
         childNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(childNode);
 
@@ -49,6 +56,7 @@ public class ServerPeer: Node {
 
         _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath() {
             GUID = nodeGuid,
+            Name = name,
             Parent = parent,
             ScenePath = scenePath,
             OwnerPeerId = ownerPeerId,
@@ -57,9 +65,43 @@ public class ServerPeer: Node {
         _SynchronizedNodes.Add(nodeGuid, childNode);
 
         // Send command to all connected clients
-        _RPC.Client.SpawnSynchronizedSceneBroadcast(parent, scenePath, nodeGuid, ownerPeerId, masterConfiguration);
+        _RPC.Client.SpawnSynchronizedSceneBroadcast(parent, name, scenePath, nodeGuid, ownerPeerId, masterConfiguration);
 
         return childNode;
+    }
+
+    public Node SpawnSynchronizedSceneMapped(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+        return SpawnSynchronizedSceneMapped<Node>(parent, name, serverScenePath, clientScenePath, ownerPeerId, masterConfiguration);
+    }
+
+    public T SpawnSynchronizedSceneMapped<T>(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
+        var nodeGuid = _GenerateGUID();
+        var parentNode = GetNode(parent);
+        var serverChildNode = GD.Load<PackedScene>(serverScenePath).Instance<T>();
+        serverChildNode.Name = GenerateNetworkName(name, nodeGuid);
+        serverChildNode.SetNetworkMaster(ownerPeerId);
+        parentNode.AddChild(serverChildNode);
+
+        if (masterConfiguration != null) {
+            foreach (var kv in masterConfiguration) {
+                serverChildNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
+            }
+        }
+
+        _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath() {
+            GUID = nodeGuid,
+            Name = name,
+            Parent = parent,
+            ScenePath = clientScenePath,
+            OwnerPeerId = ownerPeerId,
+            MasterConfiguration = masterConfiguration
+        });
+        _SynchronizedNodes.Add(nodeGuid, serverChildNode);
+
+        // Send command to all connected clients
+        _RPC.Client.SpawnSynchronizedSceneBroadcast(parent, name, clientScenePath, nodeGuid, ownerPeerId, masterConfiguration);
+
+        return serverChildNode;
     }
 
     public void RemoveSynchronizedNode(Node node) {
@@ -88,25 +130,36 @@ public class ServerPeer: Node {
     private void _PeerConnected(int peerId) {
         _Logger.DebugM("_PeerConnected", $"Peer {peerId} connected.");
         _RPC.SyncInput.CreatePeerInput(peerId);
+        _Players[peerId] = "Player";
+
+        _SpawnExistingScenes(peerId);
+        EmitSignal(nameof(PeerConnected), peerId);
+    }
+
+    private void _SpawnExistingScenes(int peerId) {
+        _Logger.DebugM("_SpawnExistingScenes", $"Spawning existing scenes on peer {peerId}.");
 
         // Spawn existing scenes
         foreach (var kv in _SynchronizedScenePaths) {
             var syncScenePath = kv.Value;
-            _RPC.Client.SpawnSynchronizedSceneOn(peerId, syncScenePath.Parent, syncScenePath.ScenePath, syncScenePath.GUID, syncScenePath.OwnerPeerId, syncScenePath.MasterConfiguration);
+            _RPC.Client.SpawnSynchronizedSceneOn(peerId, syncScenePath.Parent, syncScenePath.Name, syncScenePath.ScenePath, syncScenePath.GUID, syncScenePath.OwnerPeerId, syncScenePath.MasterConfiguration);
         }
-
-        EmitSignal(nameof(PeerConnected), peerId);
     }
 
     private void _PeerDisconnected(int peerId) {
         _Logger.DebugM("_PeerDisconnected", $"Peer {peerId} disconnected.");
         _RPC.SyncInput.RemovePeerInput(peerId);
+        _Players.Remove(peerId);
 
         EmitSignal(nameof(PeerDisconnected), peerId);
     }
 
-    private string _GenerateGUID() {
+    private static string _GenerateGUID() {
         return Guid.NewGuid().ToString();
+    }
+
+    public static string GenerateNetworkName(string name, string guid) {
+        return $"{name}#{guid}";
     }
 
     public override void _PhysicsProcess(float delta)

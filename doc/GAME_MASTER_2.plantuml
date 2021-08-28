@@ -1,0 +1,20 @@
+@startuml Game
+
+database Server
+actor Client1
+actor Client2
+
+Server -> Server : WaitingFirstPlayer
+Client1 -> Server : PeerConnected
+Server -> Client1 : PlayersUpdated
+Server -> Server : WaitingSecondPlayer
+Client2 -> Server : PeerConnected
+Server -> Client1 : PlayersUpdated
+Server -> Client2 : PlayersUpdated
+Server -> Server : WaitingMaxPlayers
+Client1 -> Server : ManualStartGame
+Server -> Server : StartGame
+Server -> Client1 : StartGame
+Server -> Client2 : StartGame
+
+@enduml

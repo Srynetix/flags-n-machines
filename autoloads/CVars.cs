@@ -11,6 +11,7 @@ public class CVars {
 
     public CVars() {
         _Logger = Logging.GetLogger("CVars");
+        _Logger.SetMaxLogLevel(LogLevel.Error);
         _Store = KVStore.GetInstance();
         _InitializeVars();
     }

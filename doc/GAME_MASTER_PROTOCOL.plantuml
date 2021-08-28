@@ -1,0 +1,11 @@
+@startuml Connection
+
+[*] --> WaitingFirstPlayer
+WaitingFirstPlayer --> WaitingSecondPlayer : First player connected
+WaitingSecondPlayer --> WaitingMaxPlayers : Second player connected
+WaitingMaxPlayers --> GameStarted : Manual game start
+WaitingMaxPlayers --> GameStarted : Waiting time elapsed
+
+GameStarted --> [*]
+
+@enduml

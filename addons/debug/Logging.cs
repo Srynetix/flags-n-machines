@@ -80,16 +80,20 @@ public class Logging: Godot.Object {
         _Levels[name] = logLevel;
     }
 
+    public void SetMaxLogLevel(LogLevel logLevel) {
+        SetMaxLogLevel(Name, logLevel);
+    }
+
+    private bool _IsLevelShown(LogLevel level) {
+        var thisLevel = GetLogLevelForName(Name);
+        return level >= thisLevel;
+    }
+
     private string _FormatArgs(params object[] values) {
         return string.Join(" ", values.Select(p => p.ToString()).ToArray());
     }
 
     private void _ShowLogLine(LogLevel level, string logLine) {
-        var maxLevel = GetLogLevelForName(Name);
-        if (level < maxLevel) {
-            return;
-        }
-
         if (level < LogLevel.Warning) {
             GD.Print(logLine);
         } else {
@@ -105,6 +109,10 @@ public class Logging: Godot.Object {
     }
 
     private void _Log(LogLevel level, params object[] values) {
+        if (!_IsLevelShown(level)) {
+            return;
+        }
+
         Messages.Add(new LogMessage() {
             Level = level,
             LoggerName = Name,
@@ -147,6 +155,10 @@ public class Logging: Godot.Object {
     }
 
     private void _LogMethod(LogLevel level, string method, params object[] values) {
+        if (!_IsLevelShown(level)) {
+            return;
+        }
+
         Messages.Add(new LogMessage() {
             Level = level,
             LoggerName = $"{Name}::{method}",
@@ -189,6 +201,10 @@ public class Logging: Godot.Object {
     }
 
     private void _LogMethodNetwork(LogLevel level, int peerId, string method, params object[] values) {
+        if (!_IsLevelShown(level)) {
+            return;
+        }
+
         Messages.Add(new LogMessage() {
             Level = level,
             LoggerName = $"{Name}::{method}",
@@ -220,6 +236,41 @@ public class Logging: Godot.Object {
 
     public void CriticalMN(int peerId, string method, params object[] values) {
         _LogMethodNetwork(LogLevel.Critical, peerId, method, values);
+    }
+
+    #endregion
+
+    #region Node utilities
+
+    public void DumpTree(SceneTree tree, string prefix = "", LogLevel level = LogLevel.Info) {
+        DumpNode(tree.Root, recursive: true, prefix: prefix, level: level);
+    }
+
+    public void DumpNode(Node node, bool recursive = false, string prefix = "", LogLevel level = LogLevel.Info) {
+        var name = node.Name;
+        var id = node.GetInstanceId();
+        var typ = node.GetType();
+
+        if (name == "root") {
+            _Log(level, $"{prefix}/");
+        } else {
+            _Log(level, $"{prefix}|- {name} ({typ}) (#{id})");
+        }
+
+        var nextPrefix = prefix;
+        if (name != "root") {
+            prefix = $"{prefix}  ";
+        }
+
+        if (recursive) {
+            if (node is ListenServerPeer listenServerPeer) {
+                DumpTree(listenServerPeer.GetServerTree(), prefix, level);
+            } else {
+                foreach (Node child in node.GetChildren()) {
+                    DumpNode(child, recursive, prefix, level);
+                }
+            }
+        }
     }
 
     #endregion

@@ -8,6 +8,7 @@ public class KVStore {
 
     public KVStore() {
         _Logger = Logging.GetLogger("KVStore");
+        _Logger.SetMaxLogLevel(LogLevel.Error);
     }
 
     public static KVStore GetInstance() {

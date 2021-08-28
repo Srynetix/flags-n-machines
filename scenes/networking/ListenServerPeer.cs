@@ -17,6 +17,10 @@ public class ListenServerPeer: Node {
         return _SceneTree.Root;
     }
 
+    public SceneTree GetServerTree() {
+        return _SceneTree;
+    }
+
     public ServerPeer GetServer() {
         return _Server;
     }

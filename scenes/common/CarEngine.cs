@@ -5,7 +5,7 @@ using Godot.Collections;
 public class CarEngine : KinematicBody, ISynchronizable
 {
     // Public state
-    public float Gravity = -40.0f;
+    public float Gravity = -20.0f;
     public float WheelBase = 0.6f;
     public float SteeringLimit = 10.0f;
     public float EnginePower = 12.0f;
@@ -18,7 +18,7 @@ public class CarEngine : KinematicBody, ISynchronizable
     public float SlipSpeed = 15.0f;
     public float TractionSlow = 0.75f;
     public float TractionFast = 0.02f;
-    public float JumpForce = 10.0f;
+    public float JumpForce = 8.0f;
     public float AirControlVelocity = 10.0f;
     public float AirControlSteerVelocity = 10.0f;
 
@@ -68,6 +68,7 @@ public class CarEngine : KinematicBody, ISynchronizable
         } else {
             // No drift in mid-air
             _CalculateAirSteering(delta);
+            _CalculateAirFriction(delta);
             _Drifting = false;
         }
 
@@ -165,6 +166,10 @@ public class CarEngine : KinematicBody, ISynchronizable
     private void _CalculateAirSteering(float delta) {
         Rotate(Transform.basis.y, _SteerAngle * delta * AirControlSteerVelocity);
         Rotate(Transform.basis.x, -_ForwardSteerAngle * delta * AirControlVelocity / 3);
+    }
+
+    private void _CalculateAirFriction(float delta) {
+        // _Acceleration += -Gravity * Transform.basis.y * delta * 0.5f;
     }
 
     private void _CalculateSteering(float delta) {

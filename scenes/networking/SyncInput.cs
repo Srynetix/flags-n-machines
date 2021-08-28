@@ -7,6 +7,7 @@ public class SyncInput: Node {
 
     public SyncInput() {
         _Logger = Logging.GetLogger("SyncInput");
+        _Logger.SetMaxLogLevel(LogLevel.Error);
         Name = "SyncInput";
     }
 
