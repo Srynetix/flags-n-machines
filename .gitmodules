@@ -7,3 +7,6 @@
 [submodule "addons/mathext"]
 	path = addons/mathext
 	url = git@github.com:Srynetix/godot-plugin-mathext
+[submodule "addons/debug"]
+	path = addons/debug
+	url = git@github.com:Srynetix/godot-plugin-debug
