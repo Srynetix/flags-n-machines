@@ -1,3 +1,6 @@
 [submodule "addons/fontawesome"]
 	path = addons/fontawesome
 	url = git@github.com:Srynetix/godot-plugin-fontawesome
+[submodule "addons/virtualcontrols"]
+	path = addons/virtualcontrols
+	url = git@github.com:Srynetix/godot-plugin-virtualcontrols
