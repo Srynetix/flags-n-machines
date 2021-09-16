@@ -24,20 +24,10 @@ public class ServerRPC: Node {
         RpcUnreliableId(1, nameof(_SendInput), input);
     }
 
-    public void AskPlayerScores() {
-        RpcId(1, nameof(_AskPlayerScores));
-    }
-
     [Master]
     private void _SendInput(Dictionary<string, float> input) {
         var peerId = GetTree().GetRpcSenderId();
         _Service.SyncInput.UpdatePeerInput(peerId, input);
-    }
-
-    [Master]
-    private void _AskPlayerScores() {
-        var peerId = GetTree().GetRpcSenderId();
-        _Service.Client.ReceivePlayerScores(new Dictionary<string, int> {});
     }
 
     [Master]

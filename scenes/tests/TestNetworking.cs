@@ -1,5 +1,5 @@
 using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 public class TestNetworking : Spatial
 {
@@ -118,7 +118,7 @@ public class TestNetworking : Spatial
     private void _StartClientGame(int peerId) {
         var car = _Server.SpawnSynchronizedScene<Car>(
             "/root/TestNetworking", "res://scenes/common/Car.tscn",
-            masterConfiguration: new Godot.Collections.Dictionary<NodePath, int> {
+            masterConfiguration: new Dictionary<NodePath, int> {
                 { "InputController", peerId }
             }
         );

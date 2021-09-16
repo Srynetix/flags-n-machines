@@ -31,7 +31,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/fontawesome/plugin.cfg", "res://addons/debug/plugin.cfg", "res://addons/mathext/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/debug/plugin.cfg", "res://addons/fontawesome/plugin.cfg", "res://addons/mathext/plugin.cfg" )
 
 [input]
 

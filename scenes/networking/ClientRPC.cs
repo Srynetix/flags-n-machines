@@ -1,5 +1,5 @@
 using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 public class ClientRPC: Node {
     [Signal]
@@ -51,10 +51,6 @@ public class ClientRPC: Node {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "RemoveSynchronizedNodeBroadcast", $"Will remove node '{path}' on peer {peerId}.");
         RpcId(peerId, nameof(_RemoveSynchronizedNode), path);
-    }
-
-    public void ReceivePlayerScores(Dictionary<string, int> scores) {
-        GD.Print("Received", scores);
     }
 
     [Remote]

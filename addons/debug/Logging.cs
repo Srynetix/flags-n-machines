@@ -21,10 +21,10 @@ public class LogMessage: Godot.Object {
 
 public class Logging: Godot.Object {
     private static LogLevel DEFAULT_LOG_LEVEL = LogLevel.Debug;
-
     private static Dictionary<string, LogLevel> _Levels = new Dictionary<string, LogLevel>();
     private static Dictionary<string, Logging> _Loggers = new Dictionary<string, Logging>();
     public static Array<LogMessage> Messages = new Array<LogMessage>();
+    public static bool ShowInConsole = true;
 
     public string Name;
 
@@ -94,6 +94,10 @@ public class Logging: Godot.Object {
     }
 
     private void _ShowLogLine(LogLevel level, string logLine) {
+        if (!ShowInConsole) {
+            return;
+        }
+
         if (level < LogLevel.Warning) {
             GD.Print(logLine);
         } else {
@@ -242,11 +246,11 @@ public class Logging: Godot.Object {
 
     #region Node utilities
 
-    public void DumpTree(SceneTree tree, string prefix = "", LogLevel level = LogLevel.Info) {
-        DumpNode(tree.Root, recursive: true, prefix: prefix, level: level);
+    public void DumpTree(SceneTree tree, bool showSceneTrees = false, string prefix = "", LogLevel level = LogLevel.Info) {
+        DumpNode(tree.Root, recursive: true, showSceneTrees: showSceneTrees, prefix: prefix, level: level);
     }
 
-    public void DumpNode(Node node, bool recursive = false, string prefix = "", LogLevel level = LogLevel.Info) {
+    public void DumpNode(Node node, bool recursive = false, bool showSceneTrees = false, string prefix = "", LogLevel level = LogLevel.Info) {
         var name = node.Name;
         var id = node.GetInstanceId();
         var typ = node.GetType();
@@ -257,17 +261,16 @@ public class Logging: Godot.Object {
             _Log(level, $"{prefix}|- {name} ({typ}) (#{id})");
         }
 
-        var nextPrefix = prefix;
         if (name != "root") {
             prefix = $"{prefix}  ";
         }
 
         if (recursive) {
-            if (node is ListenServerPeer listenServerPeer) {
-                DumpTree(listenServerPeer.GetServerTree(), prefix, level);
+            if (showSceneTrees && node is ListenServerPeer listenServerPeer) {
+                DumpTree(listenServerPeer.GetServerTree(), showSceneTrees, prefix, level);
             } else {
                 foreach (Node child in node.GetChildren()) {
-                    DumpNode(child, recursive, prefix, level);
+                    DumpNode(child, recursive, showSceneTrees, prefix, level);
                 }
             }
         }

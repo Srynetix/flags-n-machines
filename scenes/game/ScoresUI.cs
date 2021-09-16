@@ -1,5 +1,5 @@
 using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 public class ScoresUI : MarginContainer {
     private VBoxContainer _Rows;
@@ -11,6 +11,7 @@ public class ScoresUI : MarginContainer {
 
     public void UpdateScores(Dictionary<int, PlayerData> data) {
         foreach (var kv in data) {
+            GD.Print(kv.Key, kv.Value);
             _UpdatePlayerScore(kv.Key, kv.Value);
         }
     }

@@ -11,6 +11,8 @@ public class ServerGame : Spatial
     public ServerGame() {
         Name = "Game";
         _Logger = Logging.GetLogger("ServerGame");
+        Logging.ShowInConsole = false;
+        Logging.ConfigureLogLevels("info");
     }
 
     public override void _Ready()

@@ -25,6 +25,7 @@ public class ClientPeer: Node {
 
         var peer = new NetworkedMultiplayerENet();
         peer.CreateClient(ServerAddress, ServerPort);
+        peer.AllowObjectDecoding = true;
         GetTree().NetworkPeer = peer;
 
         _RPC = RPCService.GetInstance(GetTree());

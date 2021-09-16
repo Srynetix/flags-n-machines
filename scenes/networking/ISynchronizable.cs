@@ -1,4 +1,4 @@
-using Godot.Collections;
+using System.Collections.Generic;
 
 public interface ISynchronizable {
     Dictionary<string, object> _NetworkSend();

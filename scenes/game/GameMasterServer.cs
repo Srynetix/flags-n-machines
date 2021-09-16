@@ -1,9 +1,14 @@
 using Godot;
-using Godot.Collections;
+using BinaryPack;
+using System.Collections.Generic;
 
-public class PlayerData : Object {
+public class PlayerData {
     public string Name;
     public int Score;
+}
+
+public class PlayerDataDict {
+    public Dictionary<int, PlayerData> data = new Dictionary<int, PlayerData>();
 }
 
 public enum GameMasterState {
@@ -20,7 +25,7 @@ public class GameMasterServer : Node
     private GameMasterState _State;
     private ServerPeer _Server;
     private Dictionary<int, Car> _Cars = new Dictionary<int, Car>();
-    private Dictionary<int, PlayerData> _PlayerData = new Dictionary<int, PlayerData>();
+    private PlayerDataDict _PlayerData = new PlayerDataDict();
 
     public GameMasterServer() {
         _Logger = Logging.GetLogger("GameMasterServer");
@@ -28,31 +33,22 @@ public class GameMasterServer : Node
     }
 
     public override void _Ready() {
-        _Logger.InfoM("_Ready");
+        _Logger.InfoM("_Ready", "GameMasterServer is ready.");
 
         _RPC = RPCService.GetInstance(GetTree());
         _Server = NodeRegistry.GetInstance(GetTree()).GetNodeFromRegistry<ServerPeer>("Server");
         _Server.Connect(nameof(ServerPeer.PeerConnected), this, nameof(_PeerConnected));
         _Server.Connect(nameof(ServerPeer.PeerDisconnected), this, nameof(_PeerDisconnected));
-
-        _Server.SpawnSynchronizedScene(
-            "/root/Game", "res://scenes/tests/MapCSG.tscn"
-        );
-        var limits = _Server.SpawnSynchronizedScene<LevelLimits>(
-            "/root/Game", "res://scenes/tests/LevelLimits.tscn"
-        );
-        _Server.SpawnSynchronizedScene<ChaseCamera>(
-            "/root/Game", "res://scenes/common/ChaseCamera.tscn"
-        );
+        _Server.SpawnSynchronizedNamedScene<GameStage>("/root/Game", "res://scenes/game/GameStage.tscn", "Stage");
 
         // Load player scores
         foreach (var player in _Server.GetPlayers()) {
             _RegisterPlayer(player.Key, player.Value);
         }
 
-        if (_PlayerData.Count == 0) {
+        if (_PlayerData.data.Count == 0) {
             _State = GameMasterState.WaitingFirstPlayer;
-        } else if (_PlayerData.Count == 1) {
+        } else if (_PlayerData.data.Count == 1) {
             _State = GameMasterState.WaitingSecondPlayer;
         } else {
             _State = GameMasterState.WaitingMaxPlayers;
@@ -74,7 +70,7 @@ public class GameMasterServer : Node
             _Server.RemoveSynchronizedNode(_Cars[peerId]);
             _Cars.Remove(peerId);
         }
-        _PlayerData.Remove(peerId);
+        _PlayerData.data.Remove(peerId);
     }
 
     private void _NodeOutOfLimits(Node node) {
@@ -89,10 +85,12 @@ public class GameMasterServer : Node
     private void _RegisterPlayer(int peerId, string name) {
         _Logger.InfoM("_RegisterPlayer", $"Registering player '{peerId}' (name: {name})");
 
-        _PlayerData[peerId] = new PlayerData() {
+        _PlayerData.data[peerId] = new PlayerData() {
             Name = name,
             Score = 0
         };
+
+        _SendPlayerScores();
     }
 
     private void _StartClientGame(int peerId) {
@@ -106,9 +104,10 @@ public class GameMasterServer : Node
         );
         car.Translate(car.Transform.basis.y * 10);
         _Cars.Add(peerId, car);
+    }
 
-        _Server.SpawnSynchronizedScene<ScoresUI>(
-            "/root/Game", "res://scenes/game/ScoresUI.tscn"
-        );
+    private void _SendPlayerScores() {
+        var bytes = BinaryConverter.Serialize(_PlayerData);
+        Rpc(nameof(GameMasterClient.ReceivePlayerScores), bytes);
     }
 }

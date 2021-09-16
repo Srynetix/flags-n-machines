@@ -1,6 +1,6 @@
 using Godot;
-using Godot.Collections;
 using System;
+using System.Collections.Generic;
 
 class SynchronizedScenePath: Godot.Object {
     public string GUID;
@@ -70,6 +70,39 @@ public class ServerPeer: Node {
         return childNode;
     }
 
+    public Node SpawnSynchronizedNamedScene(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+        return SpawnSynchronizedNamedScene<Node>(parent, scenePath, sceneName, ownerPeerId, masterConfiguration);
+    }
+
+    public T SpawnSynchronizedNamedScene<T>(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
+        var parentNode = GetNode(parent);
+        var childNode = GD.Load<PackedScene>(scenePath).Instance<T>();
+        childNode.Name = sceneName;
+        childNode.SetNetworkMaster(ownerPeerId);
+        parentNode.AddChild(childNode);
+
+        if (masterConfiguration != null) {
+            foreach (var kv in masterConfiguration) {
+                childNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
+            }
+        }
+
+        _SynchronizedScenePaths.Add(sceneName, new SynchronizedScenePath() {
+            GUID = "",
+            Name = sceneName,
+            Parent = parent,
+            ScenePath = scenePath,
+            OwnerPeerId = ownerPeerId,
+            MasterConfiguration = masterConfiguration,
+        });
+        _SynchronizedNodes.Add(sceneName, childNode);
+
+        // Send command to all connected clients
+        _RPC.Client.SpawnSynchronizedSceneBroadcast(parent, sceneName, scenePath, "", ownerPeerId, masterConfiguration);
+
+        return childNode;
+    }
+
     public Node SpawnSynchronizedSceneMapped(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
         return SpawnSynchronizedSceneMapped<Node>(parent, name, serverScenePath, clientScenePath, ownerPeerId, masterConfiguration);
     }
@@ -121,6 +154,7 @@ public class ServerPeer: Node {
 
         var peer = new NetworkedMultiplayerENet();
         peer.CreateServer(ServerPort, MaxPlayers);
+        peer.AllowObjectDecoding = true;
         GetTree().NetworkPeer = peer;
 
         _RPC = RPCService.GetInstance(GetTree());
@@ -159,7 +193,11 @@ public class ServerPeer: Node {
     }
 
     public static string GenerateNetworkName(string name, string guid) {
-        return $"{name}#{guid}";
+        if (guid != "") {
+            return $"{name}#{guid}";
+        } else {
+            return name;
+        }
     }
 
     public override void _PhysicsProcess(float delta)
