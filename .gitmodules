@@ -4,3 +4,6 @@
 [submodule "addons/virtualcontrols"]
 	path = addons/virtualcontrols
 	url = git@github.com:Srynetix/godot-plugin-virtualcontrols
+[submodule "addons/mathext"]
+	path = addons/mathext
+	url = git@github.com:Srynetix/godot-plugin-mathext
