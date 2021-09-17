@@ -1,6 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 using BinaryPack;
+using Newtonsoft.Json;
 
 public class GameMasterClient : Node
 {
@@ -33,8 +34,10 @@ public class GameMasterClient : Node
     }
 
     [Remote]
-    public void ReceivePlayerScores(byte[] data) {
-        var scores = BinaryConverter.Deserialize<PlayerDataDict>(data);
-        _GameNode.ScoresUI.UpdateScores(scores.data);
+    public void ReceivePlayerScores(string data) {
+        var scores = JsonConvert.DeserializeObject<Dictionary<int, PlayerData>>(data);
+        // var scores = JsonSerializer.Deserialize<Dictionary<int, PlayerData>>(data);
+        _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "ReceivePlayerScores", scores);
+        _GameNode.ScoresUI.UpdateScores(scores);
     }
 }

@@ -1,5 +1,5 @@
 using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 public class SyncInput: Node {
     public Dictionary<int, SyncPeerInput> _PlayerInputs = new Dictionary<int, SyncPeerInput>();

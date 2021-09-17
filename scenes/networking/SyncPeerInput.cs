@@ -1,5 +1,5 @@
 using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 public class SyncPeerInput: Node {
     private Dictionary<string, float> _InputState = new Dictionary<string, float>();

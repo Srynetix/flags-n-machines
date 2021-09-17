@@ -1,6 +1,6 @@
 using Godot;
-using BinaryPack;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class PlayerData {
     public string Name;
@@ -107,7 +107,9 @@ public class GameMasterServer : Node
     }
 
     private void _SendPlayerScores() {
-        var bytes = BinaryConverter.Serialize(_PlayerData);
-        Rpc(nameof(GameMasterClient.ReceivePlayerScores), bytes);
+        _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_SendPlayerScores", _PlayerData.data);
+        // var data = JsonSerializer.Serialize(_PlayerData.data);
+        var data = JsonConvert.SerializeObject(_PlayerData.data);
+        Rpc(nameof(GameMasterClient.ReceivePlayerScores), data);
     }
 }
