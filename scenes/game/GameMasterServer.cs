@@ -2,13 +2,12 @@ using Godot;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-public class PlayerData {
+[JsonObject(MemberSerialization.OptIn)]
+public class PlayerData: Object {
+    [JsonProperty]
     public string Name;
+    [JsonProperty]
     public int Score;
-}
-
-public class PlayerDataDict {
-    public Dictionary<int, PlayerData> data = new Dictionary<int, PlayerData>();
 }
 
 public enum GameMasterState {
@@ -25,7 +24,7 @@ public class GameMasterServer : Node
     private GameMasterState _State;
     private ServerPeer _Server;
     private Dictionary<int, Car> _Cars = new Dictionary<int, Car>();
-    private PlayerDataDict _PlayerData = new PlayerDataDict();
+    private Dictionary<int, PlayerData> _PlayerData = new Dictionary<int, PlayerData>();
 
     public GameMasterServer() {
         _Logger = Logging.GetLogger("GameMasterServer");
@@ -46,9 +45,9 @@ public class GameMasterServer : Node
             _RegisterPlayer(player.Key, player.Value);
         }
 
-        if (_PlayerData.data.Count == 0) {
+        if (_PlayerData.Count == 0) {
             _State = GameMasterState.WaitingFirstPlayer;
-        } else if (_PlayerData.data.Count == 1) {
+        } else if (_PlayerData.Count == 1) {
             _State = GameMasterState.WaitingSecondPlayer;
         } else {
             _State = GameMasterState.WaitingMaxPlayers;
@@ -70,7 +69,7 @@ public class GameMasterServer : Node
             _Server.RemoveSynchronizedNode(_Cars[peerId]);
             _Cars.Remove(peerId);
         }
-        _PlayerData.data.Remove(peerId);
+        _PlayerData.Remove(peerId);
     }
 
     private void _NodeOutOfLimits(Node node) {
@@ -85,7 +84,7 @@ public class GameMasterServer : Node
     private void _RegisterPlayer(int peerId, string name) {
         _Logger.InfoM("_RegisterPlayer", $"Registering player '{peerId}' (name: {name})");
 
-        _PlayerData.data[peerId] = new PlayerData() {
+        _PlayerData[peerId] = new PlayerData() {
             Name = name,
             Score = 0
         };
@@ -107,9 +106,9 @@ public class GameMasterServer : Node
     }
 
     private void _SendPlayerScores() {
-        _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_SendPlayerScores", _PlayerData.data);
-        // var data = JsonSerializer.Serialize(_PlayerData.data);
-        var data = JsonConvert.SerializeObject(_PlayerData.data);
+        _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_SendPlayerScores", _PlayerData);
+
+        var data = _PlayerData.ToJson();
         Rpc(nameof(GameMasterClient.ReceivePlayerScores), data);
     }
 }

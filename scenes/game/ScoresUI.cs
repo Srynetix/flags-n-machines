@@ -11,7 +11,6 @@ public class ScoresUI : MarginContainer {
 
     public void UpdateScores(Dictionary<int, PlayerData> data) {
         foreach (var kv in data) {
-            GD.Print(kv.Key, kv.Value);
             _UpdatePlayerScore(kv.Key, kv.Value);
         }
     }
