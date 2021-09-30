@@ -3,20 +3,21 @@ using SxGD;
 
 public class SettingsMenu : ColorRect
 {
+    [OnReady("MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName/Input")]
     private LineEdit _PlayerName;
+    [OnReady("MainMargin/MainRows/TopColumn/BackButton")]
     private IconTouchButton _BackButton;
+    [OnReady("MainMargin/MainRows/BottomColumn/SaveButton")]
     private Button _SaveButton;
 
     public override void _Ready()
     {
-        _BackButton = GetNode<IconTouchButton>("MainMargin/MainRows/TopColumn/BackButton");
+        NodeExt.BindNodes(this);
+
         _BackButton.Connect(nameof(IconTouchButton.pressed), this, nameof(_GoBack));
-
-        _PlayerName = GetNode<LineEdit>("MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName/Input");
-        _PlayerName.Text = PlayerContext.GetInstance().PlayerName;
-
-        _SaveButton = GetNode<Button>("MainMargin/MainRows/BottomColumn/SaveButton");
         _SaveButton.Connect("pressed", this, nameof(_SaveSettings));
+
+        _PlayerName.Text = PlayerContext.GetInstance().PlayerName;
     }
 
     public override void _Notification(int what)
