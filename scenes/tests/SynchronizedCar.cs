@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using SxGD;
 
 public class SynchronizedCar : Spatial, ISynchronizable
 {
@@ -11,16 +12,20 @@ public class SynchronizedCar : Spatial, ISynchronizable
         AddChild(_Tracer);
     }
 
-    public Dictionary<string, object> _NetworkSend() {
+    public Dictionary<string, object> _NetworkSend()
+    {
         return new Dictionary<string, object>() {
             { "transform", Transform },
         };
     }
 
-    public void _NetworkReceive(Dictionary<string, object> data) {
-        if (data.ContainsKey("transform")) {
+    public void _NetworkReceive(Dictionary<string, object> data)
+    {
+        if (data.ContainsKey("transform"))
+        {
             var transform = data["transform"];
-            if (transform is Transform t) {
+            if (transform is Transform t)
+            {
                 Transform = t;
             }
         }
@@ -28,7 +33,8 @@ public class SynchronizedCar : Spatial, ISynchronizable
 
     public override void _Process(float delta)
     {
-        if (GetTree().IsNetworkServerChecked()) {
+        if (GetTree().IsNetworkServerChecked())
+        {
             RotateX(delta);
             RotateY(delta);
             RotateZ(delta);

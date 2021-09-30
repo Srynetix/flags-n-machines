@@ -1,7 +1,9 @@
 using Godot;
 using System.Collections.Generic;
+using SxGD;
 
-public class ClientRPC: Node {
+public class ClientRPC : Node
+{
     [Signal]
     public delegate void SpawnedFromServer(Node node);
     [Signal]
@@ -10,64 +12,75 @@ public class ClientRPC: Node {
     public Logging _Logger;
     private RPCService _Service;
 
-    public ClientRPC() {
+    public ClientRPC()
+    {
         _Logger = Logging.GetLogger("ClientRPC");
         Name = "ClientRPC";
     }
 
-    public void LinkService(RPCService service) {
+    public void LinkService(RPCService service)
+    {
         _Service = service;
     }
 
-    public void Pong(int peerId) {
+    public void Pong(int peerId)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "Pong", $"Sending pong to peer {peerId}.");
         RpcId(peerId, nameof(_Pong));
     }
 
-    public void SpawnSynchronizedSceneOn(int peerId, NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
+    public void SpawnSynchronizedSceneOn(int peerId, NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "SpawnSynchronizedSceneTo", $"Sending scene spawn '{scenePath}' named '{name}' at parent '{parent}' with guid '{guid}' and owner '{ownerPeerId}' to peer '{peerId}'.");
         RpcId(peerId, nameof(_SpawnSynchronizedScene), parent, name, scenePath, guid, ownerPeerId, masterConfiguration);
     }
 
-    public void SpawnSynchronizedSceneBroadcast(NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
+    public void SpawnSynchronizedSceneBroadcast(NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "SpawnSynchronizedSceneBroadcast", $"Sending scene spawn '{scenePath}' named '{name}' at parent '{parent}' with guid '{guid}' and owner '{ownerPeerId}' to all peers.");
         Rpc(nameof(_SpawnSynchronizedScene), parent, name, scenePath, guid, ownerPeerId, masterConfiguration);
     }
 
-    public void SynchronizeNodeBroadcast(NodePath path, Dictionary<string, object> data) {
+    public void SynchronizeNodeBroadcast(NodePath path, Dictionary<string, object> data)
+    {
         RpcUnreliable(nameof(_SynchronizeNode), path, data);
     }
 
-    public void RemoveSynchronizedNodeBroadcast(NodePath path) {
+    public void RemoveSynchronizedNodeBroadcast(NodePath path)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "RemoveSynchronizedNodeBroadcast", $"Will remove node '{path}' on all peers.");
         Rpc(nameof(_RemoveSynchronizedNode), path);
     }
 
-    public void RemoveSynchronizedNodeOn(int peerId, NodePath path) {
+    public void RemoveSynchronizedNodeOn(int peerId, NodePath path)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "RemoveSynchronizedNodeBroadcast", $"Will remove node '{path}' on peer {peerId}.");
         RpcId(peerId, nameof(_RemoveSynchronizedNode), path);
     }
 
     [Remote]
-    private void _Pong() {
+    private void _Pong()
+    {
         var myId = GetTree().GetNetworkUniqueId();
         _Logger.DebugMN(myId, "_Pong", "Pong received from server!");
     }
 
     [Remote]
-    private void _SpawnSynchronizedScene(NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration) {
+    private void _SpawnSynchronizedScene(NodePath parent, string name, string scenePath, string guid, int ownerPeerId, Dictionary<NodePath, int> masterConfiguration)
+    {
         var parentNode = GetNode(parent);
         var childNode = GD.Load<PackedScene>(scenePath).Instance();
         childNode.Name = ServerPeer.GenerateNetworkName(name, guid);
         childNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(childNode);
 
-        foreach (var kv in masterConfiguration) {
+        foreach (var kv in masterConfiguration)
+        {
             childNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
         }
 
@@ -78,18 +91,22 @@ public class ClientRPC: Node {
     }
 
     [Remote]
-    private void _SynchronizeNode(NodePath path, Dictionary<string, object> data) {
+    private void _SynchronizeNode(NodePath path, Dictionary<string, object> data)
+    {
         var node = GetNode(path);
-        if (node is ISynchronizable syncNode) {
+        if (node is ISynchronizable syncNode)
+        {
             syncNode._NetworkReceive(data);
         }
     }
 
     [Remote]
-    private void _RemoveSynchronizedNode(NodePath path) {
+    private void _RemoveSynchronizedNode(NodePath path)
+    {
         var myId = GetTree().GetNetworkUniqueId();
         var node = GetNodeOrNull(path);
-        if (node != null) {
+        if (node != null)
+        {
             node.QueueFree();
             _Logger.DebugMN(myId, "_RemoveSynchronizedNode", $"Removed node {path}.");
         }

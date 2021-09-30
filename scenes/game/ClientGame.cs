@@ -8,7 +8,8 @@ public class ClientGame : Spatial
     private ClientPeer _Client;
     private RPCService _RPC;
 
-    public ClientGame() {
+    public ClientGame()
+    {
         Name = "Game";
     }
 
@@ -19,16 +20,20 @@ public class ClientGame : Spatial
         _RPC = RPCService.GetInstance(GetTree());
         _RPC.Client.Connect(nameof(ClientRPC.SpawnedFromServer), this, nameof(_Client_NodeSpawned));
 
-        _Client = new ClientPeer() {
+        _Client = new ClientPeer()
+        {
             ServerAddress = CVars.GetInstance().GetVar<string>("join_server_address"),
             ServerPort = CVars.GetInstance().GetVar<int>("join_server_port")
         };
         AddChild(_Client);
     }
 
-    private void _Client_NodeSpawned(Node node) {
-        if (node is Car car) {
-            if (car.IsOwnedByCurrentPeer()) {
+    private void _Client_NodeSpawned(Node node)
+    {
+        if (node is Car car)
+        {
+            if (car.IsOwnedByCurrentPeer())
+            {
                 car.GetInputController().ShowVirtualControls();
                 _ChaseCamera.Target = car;
                 _ChaseCamera.Current = true;

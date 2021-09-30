@@ -15,10 +15,13 @@ public class ChaseCamera : Camera
 
     public override void _Ready()
     {
-        if (Target == null) {
-            if (TargetPath != null) {
+        if (Target == null)
+        {
+            if (TargetPath != null)
+            {
                 Target = GetNode<Spatial>(TargetPath);
-                if (ChildNode != null) {
+                if (ChildNode != null)
+                {
                     Target = Target.GetNode<Spatial>(ChildNode);
                 }
             }
@@ -27,7 +30,8 @@ public class ChaseCamera : Camera
 
     public override void _PhysicsProcess(float delta)
     {
-        if (Target == null) {
+        if (Target == null)
+        {
             return;
         }
 

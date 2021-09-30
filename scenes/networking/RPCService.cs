@@ -1,15 +1,18 @@
 using Godot;
 
-public class RPCService: Node {
+public class RPCService : Node
+{
     public ClientRPC Client;
     public ServerRPC Server;
     public SyncInput SyncInput;
 
-    public RPCService() {
+    public RPCService()
+    {
         Name = "RPCService";
     }
 
-    public static RPCService GetInstance(SceneTree tree) {
+    public static RPCService GetInstance(SceneTree tree)
+    {
         return tree.Root.GetNode<RPCService>("RPCService");
     }
 

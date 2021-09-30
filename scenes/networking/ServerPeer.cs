@@ -1,8 +1,10 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using SxGD;
 
-class SynchronizedScenePath: Godot.Object {
+class SynchronizedScenePath : Godot.Object
+{
     public string GUID;
     public string Name;
     public NodePath Parent;
@@ -11,7 +13,8 @@ class SynchronizedScenePath: Godot.Object {
     public Dictionary<NodePath, int> MasterConfiguration;
 }
 
-public class ServerPeer: Node {
+public class ServerPeer : Node
+{
     [Signal]
     public delegate void PeerConnected(int peerId);
     [Signal]
@@ -26,20 +29,24 @@ public class ServerPeer: Node {
     private Dictionary<string, SynchronizedScenePath> _SynchronizedScenePaths = new Dictionary<string, SynchronizedScenePath>();
     private Dictionary<string, Node> _SynchronizedNodes = new Dictionary<string, Node>();
 
-    public ServerPeer() {
+    public ServerPeer()
+    {
         _Logger = Logging.GetLogger("ServerPeer");
         Name = "ServerPeer";
     }
 
-    public Dictionary<int, string> GetPlayers() {
+    public Dictionary<int, string> GetPlayers()
+    {
         return _Players;
     }
 
-    public Node SpawnSynchronizedScene(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+    public Node SpawnSynchronizedScene(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null)
+    {
         return SpawnSynchronizedScene<Node>(parent, scenePath, ownerPeerId, masterConfiguration);
     }
 
-    public T SpawnSynchronizedScene<T>(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
+    public T SpawnSynchronizedScene<T>(NodePath parent, string scenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T : Node
+    {
         var nodeGuid = _GenerateGUID();
         var parentNode = GetNode(parent);
         var childNode = GD.Load<PackedScene>(scenePath).Instance<T>();
@@ -48,13 +55,16 @@ public class ServerPeer: Node {
         childNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(childNode);
 
-        if (masterConfiguration != null) {
-            foreach (var kv in masterConfiguration) {
+        if (masterConfiguration != null)
+        {
+            foreach (var kv in masterConfiguration)
+            {
                 childNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
             }
         }
 
-        _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath() {
+        _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath()
+        {
             GUID = nodeGuid,
             Name = name,
             Parent = parent,
@@ -70,24 +80,29 @@ public class ServerPeer: Node {
         return childNode;
     }
 
-    public Node SpawnSynchronizedNamedScene(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+    public Node SpawnSynchronizedNamedScene(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null)
+    {
         return SpawnSynchronizedNamedScene<Node>(parent, scenePath, sceneName, ownerPeerId, masterConfiguration);
     }
 
-    public T SpawnSynchronizedNamedScene<T>(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
+    public T SpawnSynchronizedNamedScene<T>(NodePath parent, string scenePath, string sceneName, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T : Node
+    {
         var parentNode = GetNode(parent);
         var childNode = GD.Load<PackedScene>(scenePath).Instance<T>();
         childNode.Name = sceneName;
         childNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(childNode);
 
-        if (masterConfiguration != null) {
-            foreach (var kv in masterConfiguration) {
+        if (masterConfiguration != null)
+        {
+            foreach (var kv in masterConfiguration)
+            {
                 childNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
             }
         }
 
-        _SynchronizedScenePaths.Add(sceneName, new SynchronizedScenePath() {
+        _SynchronizedScenePaths.Add(sceneName, new SynchronizedScenePath()
+        {
             GUID = "",
             Name = sceneName,
             Parent = parent,
@@ -103,11 +118,13 @@ public class ServerPeer: Node {
         return childNode;
     }
 
-    public Node SpawnSynchronizedSceneMapped(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) {
+    public Node SpawnSynchronizedSceneMapped(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null)
+    {
         return SpawnSynchronizedSceneMapped<Node>(parent, name, serverScenePath, clientScenePath, ownerPeerId, masterConfiguration);
     }
 
-    public T SpawnSynchronizedSceneMapped<T>(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T: Node {
+    public T SpawnSynchronizedSceneMapped<T>(NodePath parent, string name, string serverScenePath, string clientScenePath, int ownerPeerId = 1, Dictionary<NodePath, int> masterConfiguration = null) where T : Node
+    {
         var nodeGuid = _GenerateGUID();
         var parentNode = GetNode(parent);
         var serverChildNode = GD.Load<PackedScene>(serverScenePath).Instance<T>();
@@ -115,13 +132,16 @@ public class ServerPeer: Node {
         serverChildNode.SetNetworkMaster(ownerPeerId);
         parentNode.AddChild(serverChildNode);
 
-        if (masterConfiguration != null) {
-            foreach (var kv in masterConfiguration) {
+        if (masterConfiguration != null)
+        {
+            foreach (var kv in masterConfiguration)
+            {
                 serverChildNode.GetNode(kv.Key).SetNetworkMaster(kv.Value);
             }
         }
 
-        _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath() {
+        _SynchronizedScenePaths.Add(nodeGuid, new SynchronizedScenePath()
+        {
             GUID = nodeGuid,
             Name = name,
             Parent = parent,
@@ -137,7 +157,8 @@ public class ServerPeer: Node {
         return serverChildNode;
     }
 
-    public void RemoveSynchronizedNode(Node node) {
+    public void RemoveSynchronizedNode(Node node)
+    {
         var guid = node.Name;
         var syncNode = _SynchronizedNodes[guid];
         _SynchronizedNodes.Remove(guid);
@@ -161,7 +182,8 @@ public class ServerPeer: Node {
         _Logger.DebugM("_Ready", $"Server started on port '{ServerPort}' for '{MaxPlayers}' players.");
     }
 
-    private void _PeerConnected(int peerId) {
+    private void _PeerConnected(int peerId)
+    {
         _Logger.DebugM("_PeerConnected", $"Peer {peerId} connected.");
         _RPC.SyncInput.CreatePeerInput(peerId);
         _Players[peerId] = "Player";
@@ -170,17 +192,20 @@ public class ServerPeer: Node {
         EmitSignal(nameof(PeerConnected), peerId);
     }
 
-    private void _SpawnExistingScenes(int peerId) {
+    private void _SpawnExistingScenes(int peerId)
+    {
         _Logger.DebugM("_SpawnExistingScenes", $"Spawning existing scenes on peer {peerId}.");
 
         // Spawn existing scenes
-        foreach (var kv in _SynchronizedScenePaths) {
+        foreach (var kv in _SynchronizedScenePaths)
+        {
             var syncScenePath = kv.Value;
             _RPC.Client.SpawnSynchronizedSceneOn(peerId, syncScenePath.Parent, syncScenePath.Name, syncScenePath.ScenePath, syncScenePath.GUID, syncScenePath.OwnerPeerId, syncScenePath.MasterConfiguration);
         }
     }
 
-    private void _PeerDisconnected(int peerId) {
+    private void _PeerDisconnected(int peerId)
+    {
         _Logger.DebugM("_PeerDisconnected", $"Peer {peerId} disconnected.");
         _RPC.SyncInput.RemovePeerInput(peerId);
         _Players.Remove(peerId);
@@ -188,25 +213,33 @@ public class ServerPeer: Node {
         EmitSignal(nameof(PeerDisconnected), peerId);
     }
 
-    private static string _GenerateGUID() {
+    private static string _GenerateGUID()
+    {
         return Guid.NewGuid().ToString();
     }
 
-    public static string GenerateNetworkName(string name, string guid) {
-        if (guid != "") {
+    public static string GenerateNetworkName(string name, string guid)
+    {
+        if (guid != "")
+        {
             return $"{name}#{guid}";
-        } else {
+        }
+        else
+        {
             return name;
         }
     }
 
     public override void _PhysicsProcess(float delta)
     {
-        foreach (var kv in _SynchronizedNodes) {
+        foreach (var kv in _SynchronizedNodes)
+        {
             var node = kv.Value;
-            if (node is ISynchronizable syncNode) {
+            if (node is ISynchronizable syncNode)
+            {
                 var data = syncNode._NetworkSend();
-                if (data != null && data.Keys.Count > 0) {
+                if (data != null && data.Keys.Count > 0)
+                {
                     _RPC.Client.SynchronizeNodeBroadcast(node.GetPath(), data);
                 }
             }
@@ -215,13 +248,17 @@ public class ServerPeer: Node {
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey) {
-            if (eventKey.Pressed) {
-                if (eventKey.Scancode == (int)KeyList.F4) {
+        if (@event is InputEventKey eventKey)
+        {
+            if (eventKey.Pressed)
+            {
+                if (eventKey.Scancode == (int)KeyList.F4)
+                {
                     GetTree().Root.PrintTreePretty();
                 }
 
-                else if (eventKey.Scancode == (int)KeyList.F5) {
+                else if (eventKey.Scancode == (int)KeyList.F5)
+                {
                     GD.Print(RPCService.GetInstance(GetTree()).SyncInput._PlayerInputs);
                 }
             }

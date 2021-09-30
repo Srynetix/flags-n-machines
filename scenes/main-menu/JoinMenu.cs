@@ -1,4 +1,5 @@
 using Godot;
+using SxGD;
 
 public class JoinMenu : ColorRect
 {
@@ -29,12 +30,14 @@ public class JoinMenu : ColorRect
 
     public override void _Notification(int what)
     {
-        if (what == MainLoop.NotificationWmGoBackRequest) {
+        if (what == MainLoop.NotificationWmGoBackRequest)
+        {
             _GoBack();
         }
     }
 
-    private void _StartGame() {
+    private void _StartGame()
+    {
         // Update parameters
         CVars.GetInstance().SetVar<string>("join_server_address", _ServerAddress.Text);
         CVars.GetInstance().SetVar<int>("join_server_port", int.Parse(_ServerPort.Text));
@@ -42,21 +45,27 @@ public class JoinMenu : ColorRect
         GetTree().ChangeScene("res://scenes/main-menu/ClientLobby.tscn");
     }
 
-    private void _ValidateLineEdit(string text) {
+    private void _ValidateLineEdit(string text)
+    {
         _UpdateForm();
     }
 
-    private void _UpdateForm() {
+    private void _UpdateForm()
+    {
         _StartButton.Disabled = !_CheckParametersValidation();
     }
 
-    private bool _CheckParametersValidation() {
+    private bool _CheckParametersValidation()
+    {
         var server = _ServerAddress.Text;
-        if (server != "") {
+        if (server != "")
+        {
             var port = _ServerPort.Text;
             var portInt = 0;
-            if (int.TryParse(port, out portInt)) {
-                if (portInt > 0) {
+            if (int.TryParse(port, out portInt))
+            {
+                if (portInt > 0)
+                {
                     return true;
                 }
             }
@@ -65,7 +74,8 @@ public class JoinMenu : ColorRect
         return false;
     }
 
-    private void _GoBack() {
+    private void _GoBack()
+    {
         GetTree().ChangeScene("res://scenes/main-menu/MainMenu.tscn");
     }
 }

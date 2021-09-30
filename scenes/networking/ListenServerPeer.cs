@@ -1,6 +1,8 @@
 using Godot;
+using SxGD;
 
-public class ListenServerPeer: Node {
+public class ListenServerPeer : Node
+{
     public int ServerPort;
     public int MaxPlayers;
 
@@ -8,24 +10,29 @@ public class ListenServerPeer: Node {
     private SceneTree _SceneTree;
     private ServerPeer _Server;
 
-    public ListenServerPeer() {
+    public ListenServerPeer()
+    {
         _Logger = Logging.GetLogger("ListenServerPeer");
         Name = "ListenServerPeer";
     }
 
-    public Node GetServerRoot() {
+    public Node GetServerRoot()
+    {
         return _SceneTree.Root;
     }
 
-    public SceneTree GetServerTree() {
+    public SceneTree GetServerTree()
+    {
         return _SceneTree;
     }
 
-    public ServerPeer GetServer() {
+    public ServerPeer GetServer()
+    {
         return _Server;
     }
 
-    public void PrintServerTree() {
+    public void PrintServerTree()
+    {
         _SceneTree.Root.PrintTreePretty();
     }
 
@@ -38,7 +45,8 @@ public class ListenServerPeer: Node {
         var rpc = new RPCService();
         _SceneTree.Root.AddChild(rpc);
 
-        _Server = new ServerPeer() {
+        _Server = new ServerPeer()
+        {
             ServerPort = ServerPort,
             MaxPlayers = MaxPlayers
         };

@@ -21,26 +21,33 @@ public class TestCar : Spatial
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey) {
-            if (eventKey.Pressed) {
-                if (eventKey.Scancode == ((uint)KeyList.Enter)) {
+        if (@event is InputEventKey eventKey)
+        {
+            if (eventKey.Pressed)
+            {
+                if (eventKey.Scancode == ((uint)KeyList.Enter))
+                {
                     _ResetCar(_Car);
                 }
 
-                else if (eventKey.Scancode == ((uint)KeyList.Tab)) {
+                else if (eventKey.Scancode == ((uint)KeyList.Tab))
+                {
                     _WorldCamera.Current = !_WorldCamera.Current;
                 }
             }
         }
     }
 
-    private void _OutOfLimits(Node node) {
-        if (node is Car car) {
+    private void _OutOfLimits(Node node)
+    {
+        if (node is Car car)
+        {
             _ResetCar(car);
         }
     }
 
-    private void _ResetCar(Car car) {
+    private void _ResetCar(Car car)
+    {
         car.ResetMovement();
         car.Transform = _InitialCarTransform;
     }

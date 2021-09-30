@@ -1,6 +1,8 @@
 using Godot;
+using SxGD;
 
-public class CarInputController: Node {
+public class CarInputController : Node
+{
     public float SteerLeft;
     public float SteerRight;
     public bool Accelerate;
@@ -12,12 +14,14 @@ public class CarInputController: Node {
     public override void _Ready()
     {
         _VirtualControls = GetNode<VirtualControls>("VirtualControls");
-        if (NetworkExt.IsNetworkMaster(this)) {
+        if (NetworkExt.IsNetworkMaster(this))
+        {
             _VirtualControls.Visible = true;
         }
     }
 
-    public void ShowVirtualControls() {
+    public void ShowVirtualControls()
+    {
         _VirtualControls.Visible = true;
     }
 
@@ -25,7 +29,8 @@ public class CarInputController: Node {
     {
         var syncInput = RPCService.GetInstance(GetTree()).SyncInput;
 
-        if (NetworkExt.IsNetworkServer(GetTree())) {
+        if (NetworkExt.IsNetworkServer(GetTree()))
+        {
             SteerLeft = syncInput.GetActionStrength(this, "steer_left");
             SteerRight = syncInput.GetActionStrength(this, "steer_right");
             Accelerate = syncInput.IsActionPressed(this, "accelerate");

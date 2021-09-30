@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using SxGD;
 
 public class TestsMenu : ColorRect
 {
@@ -18,16 +19,19 @@ public class TestsMenu : ColorRect
 
     public override void _Notification(int what)
     {
-        if (what == MainLoop.NotificationWmGoBackRequest) {
+        if (what == MainLoop.NotificationWmGoBackRequest)
+        {
             _GoBack();
         }
     }
 
-    private void _GoBack() {
+    private void _GoBack()
+    {
         GetTree().ChangeScene("res://scenes/main-menu/MainMenu.tscn");
     }
 
-    private void _SelectTest(string path) {
+    private void _SelectTest(string path)
+    {
         GetTree().ChangeScene($"res://scenes/tests/{path}.tscn");
     }
 }

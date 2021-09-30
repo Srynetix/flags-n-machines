@@ -1,4 +1,5 @@
 using Godot;
+using SxGD;
 
 public class SettingsMenu : ColorRect
 {
@@ -20,16 +21,19 @@ public class SettingsMenu : ColorRect
 
     public override void _Notification(int what)
     {
-        if (what == MainLoop.NotificationWmGoBackRequest) {
+        if (what == MainLoop.NotificationWmGoBackRequest)
+        {
             _GoBack();
         }
     }
 
-    private void _GoBack() {
+    private void _GoBack()
+    {
         GetTree().ChangeScene("res://scenes/main-menu/MainMenu.tscn");
     }
 
-    private void _SaveSettings() {
+    private void _SaveSettings()
+    {
         PlayerContext.GetInstance().PlayerName = _PlayerName.Text;
         PlayerContext.GetInstance().SaveStore();
     }

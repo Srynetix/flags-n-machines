@@ -1,5 +1,5 @@
 using Godot;
-using System.Collections.Generic;
+using SxGD;
 
 public class ServerGame : Spatial
 {
@@ -8,7 +8,8 @@ public class ServerGame : Spatial
     private ClientPeer _Client;
     private Logging _Logger;
 
-    public ServerGame() {
+    public ServerGame()
+    {
         Name = "Game";
         _Logger = Logging.GetLogger("ServerGame");
         Logging.ShowInConsole = false;
@@ -17,7 +18,8 @@ public class ServerGame : Spatial
 
     public override void _Ready()
     {
-        _ListenServer = new ListenServerPeer() {
+        _ListenServer = new ListenServerPeer()
+        {
             ServerPort = CVars.GetInstance().GetVar<int>("host_server_port"),
             MaxPlayers = CVars.GetInstance().GetVar<int>("host_max_players")
         };
@@ -28,7 +30,8 @@ public class ServerGame : Spatial
         listenRegistry.RegisterNode("Server", _Server);
 
         _ListenServer.GetServerRoot().AddChild(listenRegistry);
-        _ListenServer.GetServerRoot().AddChild(new Spatial() {
+        _ListenServer.GetServerRoot().AddChild(new Spatial()
+        {
             Name = "Game"
         });
         _Server.SpawnSynchronizedSceneMapped(
@@ -38,7 +41,8 @@ public class ServerGame : Spatial
             clientScenePath: "res://scenes/game/GameMasterClient.tscn"
         );
 
-        _Client = new ClientPeer() {
+        _Client = new ClientPeer()
+        {
             ServerAddress = "127.0.0.1",
             ServerPort = CVars.GetInstance().GetVar<int>("host_server_port")
         };

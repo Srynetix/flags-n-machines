@@ -21,19 +21,23 @@ public class FPSCamera : Camera
     {
         var movement = Vector2.Zero;
 
-        if (Input.IsActionPressed("steer_left")) {
+        if (Input.IsActionPressed("steer_left"))
+        {
             movement.x -= 1;
         }
 
-        if (Input.IsActionPressed("steer_right")) {
+        if (Input.IsActionPressed("steer_right"))
+        {
             movement.x += 1;
         }
 
-        if (Input.IsActionPressed("accelerate")) {
+        if (Input.IsActionPressed("accelerate"))
+        {
             movement.y -= 1;
         }
 
-        if (Input.IsActionPressed("brake")) {
+        if (Input.IsActionPressed("brake"))
+        {
             movement.y += 1;
         }
 
@@ -54,7 +58,8 @@ public class FPSCamera : Camera
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventMouseMotion motionEvent) {
+        if (@event is InputEventMouseMotion motionEvent)
+        {
             _MouseDelta = motionEvent.Relative;
         }
     }

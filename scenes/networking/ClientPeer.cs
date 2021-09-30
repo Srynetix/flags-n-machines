@@ -1,6 +1,8 @@
 using Godot;
+using SxGD;
 
-public class ClientPeer: Node {
+public class ClientPeer : Node
+{
     [Signal]
     public delegate void ConnectedToServer();
 
@@ -10,7 +12,8 @@ public class ClientPeer: Node {
     private RPCService _RPC;
     private Logging _Logger;
 
-    public ClientPeer() {
+    public ClientPeer()
+    {
         _Logger = Logging.GetLogger("ClientPeer");
         Name = "ClientPeer";
     }
@@ -32,15 +35,18 @@ public class ClientPeer: Node {
         _Logger.DebugM("_Ready", "Client is ready.");
     }
 
-    private void _PeerConnected(int peerId) {
+    private void _PeerConnected(int peerId)
+    {
         _Logger.DebugM("_PeerConnected", $"Peer {peerId} connected.");
     }
 
-    private void _PeerDisconnected(int peerId) {
+    private void _PeerDisconnected(int peerId)
+    {
         _Logger.DebugM("_PeerDisconnected", $"Peer {peerId} disconnected.");
     }
 
-    private void _ConnectedToServer() {
+    private void _ConnectedToServer()
+    {
         _Logger.InfoM("_ConnectedToServer", "Connected to server.");
 
         _RPC.SyncInput.CreatePeerInput(GetTree().GetNetworkUniqueId());
@@ -49,11 +55,13 @@ public class ClientPeer: Node {
         EmitSignal(nameof(ConnectedToServer));
     }
 
-    private void _ConnectionFailed() {
+    private void _ConnectionFailed()
+    {
         _Logger.ErrorM("_ConnectedToServer", "Connection failed.");
     }
 
-    private void _ServerDisconnected() {
+    private void _ServerDisconnected()
+    {
         _Logger.ErrorM("_ConnectedToServer", "Server disconnected.");
         QueueFree();
     }
@@ -66,16 +74,20 @@ public class ClientPeer: Node {
     public override void _PhysicsProcess(float delta)
     {
         var myInput = _RPC.SyncInput.GetCurrentInput();
-        if (myInput != null) {
+        if (myInput != null)
+        {
             _RPC.Server.SendInput(myInput.GetInputState());
         }
     }
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey) {
-            if (eventKey.Pressed) {
-                if (eventKey.Scancode == (int)KeyList.F6) {
+        if (@event is InputEventKey eventKey)
+        {
+            if (eventKey.Pressed)
+            {
+                if (eventKey.Scancode == (int)KeyList.F6)
+                {
                     GetTree().Root.PrintTreePretty();
                 }
             }

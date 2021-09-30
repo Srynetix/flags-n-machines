@@ -1,16 +1,19 @@
 using Godot;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SxGD;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class PlayerData: Object {
+public class PlayerData : Object
+{
     [JsonProperty]
     public string Name;
     [JsonProperty]
     public int Score;
 }
 
-public enum GameMasterState {
+public enum GameMasterState
+{
     WaitingFirstPlayer,
     WaitingSecondPlayer,
     WaitingMaxPlayers,
@@ -26,12 +29,14 @@ public class GameMasterServer : Node
     private Dictionary<int, Car> _Cars = new Dictionary<int, Car>();
     private Dictionary<int, PlayerData> _PlayerData = new Dictionary<int, PlayerData>();
 
-    public GameMasterServer() {
+    public GameMasterServer()
+    {
         _Logger = Logging.GetLogger("GameMasterServer");
         _State = GameMasterState.WaitingFirstPlayer;
     }
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         _Logger.InfoM("_Ready", "GameMasterServer is ready.");
 
         _RPC = RPCService.GetInstance(GetTree());
@@ -41,20 +46,27 @@ public class GameMasterServer : Node
         _Server.SpawnSynchronizedNamedScene<GameStage>("/root/Game", "res://scenes/game/GameStage.tscn", "Stage");
 
         // Load player scores
-        foreach (var player in _Server.GetPlayers()) {
+        foreach (var player in _Server.GetPlayers())
+        {
             _RegisterPlayer(player.Key, player.Value);
         }
 
-        if (_PlayerData.Count == 0) {
+        if (_PlayerData.Count == 0)
+        {
             _State = GameMasterState.WaitingFirstPlayer;
-        } else if (_PlayerData.Count == 1) {
+        }
+        else if (_PlayerData.Count == 1)
+        {
             _State = GameMasterState.WaitingSecondPlayer;
-        } else {
+        }
+        else
+        {
             _State = GameMasterState.WaitingMaxPlayers;
         }
     }
 
-    private void _PeerConnected(int peerId) {
+    private void _PeerConnected(int peerId)
+    {
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_Server_PeerConnected", peerId);
 
         var playerName = _Server.GetPlayers()[peerId];
@@ -62,18 +74,22 @@ public class GameMasterServer : Node
         _StartClientGame(peerId);
     }
 
-    private void _PeerDisconnected(int peerId) {
+    private void _PeerDisconnected(int peerId)
+    {
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_Server_PeerDisconnected", peerId);
 
-        if (_Cars.ContainsKey(peerId)) {
+        if (_Cars.ContainsKey(peerId))
+        {
             _Server.RemoveSynchronizedNode(_Cars[peerId]);
             _Cars.Remove(peerId);
         }
         _PlayerData.Remove(peerId);
     }
 
-    private void _NodeOutOfLimits(Node node) {
-        if (node is Car car) {
+    private void _NodeOutOfLimits(Node node)
+    {
+        if (node is Car car)
+        {
             car.ResetMovement();
             car.Translation = new Vector3();
             car.Rotation = new Vector3();
@@ -81,10 +97,12 @@ public class GameMasterServer : Node
         }
     }
 
-    private void _RegisterPlayer(int peerId, string name) {
+    private void _RegisterPlayer(int peerId, string name)
+    {
         _Logger.InfoM("_RegisterPlayer", $"Registering player '{peerId}' (name: {name})");
 
-        _PlayerData[peerId] = new PlayerData() {
+        _PlayerData[peerId] = new PlayerData()
+        {
             Name = name,
             Score = 0
         };
@@ -92,7 +110,8 @@ public class GameMasterServer : Node
         _SendPlayerScores();
     }
 
-    private void _StartClientGame(int peerId) {
+    private void _StartClientGame(int peerId)
+    {
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_StartClientGame", peerId);
 
         var car = _Server.SpawnSynchronizedScene<Car>(
@@ -105,7 +124,8 @@ public class GameMasterServer : Node
         _Cars.Add(peerId, car);
     }
 
-    private void _SendPlayerScores() {
+    private void _SendPlayerScores()
+    {
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_SendPlayerScores", _PlayerData);
 
         var data = _PlayerData.ToJson();

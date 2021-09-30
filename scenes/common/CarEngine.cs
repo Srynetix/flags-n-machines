@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using SxGD;
 
 // Mostly implemented from https://kidscancode.org/godot_recipes/3d/kinematic_car/
 public class CarEngine : KinematicBody, ISynchronizable
@@ -62,10 +63,13 @@ public class CarEngine : KinematicBody, ISynchronizable
     {
         _GetInput(delta);
 
-        if (IsOnFloor() && !_Jumping) {
+        if (IsOnFloor() && !_Jumping)
+        {
             _ApplyFriction(delta);
             _CalculateSteering(delta);
-        } else {
+        }
+        else
+        {
             // No drift in mid-air
             _CalculateAirSteering(delta);
             _CalculateAirFriction(delta);
@@ -74,7 +78,8 @@ public class CarEngine : KinematicBody, ISynchronizable
 
         /// Apply gravity on car
         var gravityVector = Transform.basis.y;
-        if (!_FrontRay.IsColliding() && !_RearRay.IsColliding()) {
+        if (!_FrontRay.IsColliding() && !_RearRay.IsColliding())
+        {
             GlobalTransform = MathExt.InterpolateAlignWithY(GlobalTransform, Vector3.Up, 0.01f);
             gravityVector = Vector3.Up;
         }
@@ -83,18 +88,23 @@ public class CarEngine : KinematicBody, ISynchronizable
         _Velocity += _Acceleration * delta;
 
         var upVector = Transform.basis.y;
-        if (_Jumping) {
+        if (_Jumping)
+        {
             _Velocity = MoveAndSlide(_Velocity, upVector, false);
-        } else {
+        }
+        else
+        {
             _Velocity = MoveAndSlideWithSnap(_Velocity, -Transform.basis.y, upVector, false);
         }
 
         // Detect floor
-        if (_FrontRay.IsColliding() || _RearRay.IsColliding()) {
+        if (_FrontRay.IsColliding() || _RearRay.IsColliding())
+        {
             var nf = _FrontRay.IsColliding() ? _FrontRay.GetCollisionNormal() : Transform.basis.y;
             var nr = _RearRay.IsColliding() ? _RearRay.GetCollisionNormal() : Transform.basis.y;
             var n = ((nr + nf) / 2.0f).Normalized();
-            if (n != Vector3.Zero) {
+            if (n != Vector3.Zero)
+            {
                 var transform = MathExt.AlignWithY(GlobalTransform, n);
                 GlobalTransform = GlobalTransform.InterpolateWith(transform, 0.1f);
             }
@@ -113,16 +123,19 @@ public class CarEngine : KinematicBody, ISynchronizable
         _NodeTracer.TraceParameter("On floor?", IsOnFloor());
     }
 
-    private void _GetInput(float delta) {
+    private void _GetInput(float delta)
+    {
         var turn = _InputController.SteerLeft;
         turn -= _InputController.SteerRight;
         _SteerAngle = turn * Mathf.Deg2Rad(SteeringLimit);
 
         var forwardTurn = 0;
-        if (_InputController.Accelerate) {
+        if (_InputController.Accelerate)
+        {
             forwardTurn += 1;
         }
-        if (_InputController.Brake) {
+        if (_InputController.Brake)
+        {
             forwardTurn -= 1;
         }
         _ForwardSteerAngle = forwardTurn * Mathf.Deg2Rad(SteeringLimit);
@@ -133,28 +146,37 @@ public class CarEngine : KinematicBody, ISynchronizable
         var yRotation = Mathf.Clamp((_Mesh.Rotation.y * 0.95f) + (_SteerAngle * 4 * delta), -MaxCarSteeringLimit, MaxCarSteeringLimit);
         _Mesh.Rotation = new Vector3(_Mesh.Rotation.x, yRotation, _Mesh.Rotation.z);
 
-        if (IsOnFloor()) {
+        if (IsOnFloor())
+        {
             // Handle acceleration
             _Acceleration = Vector3.Zero;
-            if (_InputController.Accelerate) {
+            if (_InputController.Accelerate)
+            {
                 _Acceleration = -Transform.basis.z * EnginePower;
-            } else if (_InputController.Brake) {
+            }
+            else if (_InputController.Brake)
+            {
                 _Acceleration = -Transform.basis.z * Braking;
             }
 
             // Handle jump
-            if (_Jumping) {
+            if (_Jumping)
+            {
                 _Jumping = false;
-            } else if (JumpEnabled && _InputController.Jump && !_Jumping) {
+            }
+            else if (JumpEnabled && _InputController.Jump && !_Jumping)
+            {
                 _Velocity += Transform.basis.y * JumpForce;
                 _Jumping = true;
             }
         }
     }
 
-    private void _ApplyFriction(float delta) {
+    private void _ApplyFriction(float delta)
+    {
         // Make the car brake automatically at low speed (disable 'soap effect')
-        if (_Velocity.Length() < 1 && _Acceleration.Length() == 0) {
+        if (_Velocity.Length() < 1 && _Acceleration.Length() == 0)
+        {
             _Velocity = Vector3.Zero;
         }
 
@@ -163,16 +185,19 @@ public class CarEngine : KinematicBody, ISynchronizable
         _Acceleration += dragForce + frictionForce;
     }
 
-    private void _CalculateAirSteering(float delta) {
+    private void _CalculateAirSteering(float delta)
+    {
         Rotate(Transform.basis.y, _SteerAngle * delta * AirControlSteerVelocity);
         Rotate(Transform.basis.x, -_ForwardSteerAngle * delta * AirControlVelocity / 3);
     }
 
-    private void _CalculateAirFriction(float delta) {
+    private void _CalculateAirFriction(float delta)
+    {
         // _Acceleration += -Gravity * Transform.basis.y * delta * 0.5f;
     }
 
-    private void _CalculateSteering(float delta) {
+    private void _CalculateSteering(float delta)
+    {
         var rearWheel = Transform.origin + Transform.basis.z * WheelBase / 2.0f;
         var frontWheel = Transform.origin - Transform.basis.z * WheelBase / 2.0f;
         rearWheel += _Velocity * delta;
@@ -180,34 +205,42 @@ public class CarEngine : KinematicBody, ISynchronizable
         var newHeading = rearWheel.DirectionTo(frontWheel);
 
         // Traction
-        if (!_Drifting && _Velocity.Length() > SlipSpeed && Mathf.Abs(_SteerAngle) > 0) {
+        if (!_Drifting && _Velocity.Length() > SlipSpeed && Mathf.Abs(_SteerAngle) > 0)
+        {
             _Drifting = true;
         }
-        if (_Drifting && _SteerAngle == 0) {
+        if (_Drifting && _SteerAngle == 0)
+        {
             _Drifting = false;
         }
         var traction = _Drifting ? TractionFast : TractionSlow;
 
         var d = newHeading.Dot(_Velocity.Normalized());
-        if (d > 0) {
+        if (d > 0)
+        {
             _Velocity = MathExt.LerpVector3(_Velocity, newHeading * Mathf.Min(_Velocity.Length(), MaxSpeedForward), traction);
-        } else if (d < 0) {
+        }
+        else if (d < 0)
+        {
             _Velocity = -newHeading * Mathf.Min(_Velocity.Length(), MaxSpeedReverse);
         }
 
         LookAt(Transform.origin + newHeading, Transform.basis.y);
     }
 
-    public void ResetMovement() {
+    public void ResetMovement()
+    {
         _Acceleration = Vector3.Zero;
         _Velocity = Vector3.Zero;
     }
 
-    public CarInputController GetInputController() {
+    public CarInputController GetInputController()
+    {
         return _InputController;
     }
 
-    public Dictionary<string, object> _NetworkSend() {
+    public Dictionary<string, object> _NetworkSend()
+    {
         return new Dictionary<string, object>() {
             { "transform", Transform },
             { "mesh_transform", _Mesh.Transform },
@@ -217,38 +250,49 @@ public class CarEngine : KinematicBody, ISynchronizable
         };
     }
 
-    public void _NetworkReceive(Dictionary<string, object> data) {
-        if (data.ContainsKey("transform")) {
+    public void _NetworkReceive(Dictionary<string, object> data)
+    {
+        if (data.ContainsKey("transform"))
+        {
             var transform = data["transform"];
-            if (transform is Transform t) {
+            if (transform is Transform t)
+            {
                 Transform = t;
             }
         }
 
-        if (data.ContainsKey("mesh_transform")) {
+        if (data.ContainsKey("mesh_transform"))
+        {
             var transform = data["mesh_transform"];
-            if (transform is Transform t) {
+            if (transform is Transform t)
+            {
                 _Mesh.Transform = t;
             }
         }
 
-        if (data.ContainsKey("drift_particles_enabled")) {
+        if (data.ContainsKey("drift_particles_enabled"))
+        {
             var value = data["drift_particles_enabled"];
-            if (value is bool v) {
+            if (value is bool v)
+            {
                 _DriftParticles.Emitting = v;
             }
         }
 
-        if (data.ContainsKey("front_left_wheel_rot")) {
+        if (data.ContainsKey("front_left_wheel_rot"))
+        {
             var value = data["front_left_wheel_rot"];
-            if (value is Vector3 v) {
+            if (value is Vector3 v)
+            {
                 _FrontLeftWheel.Rotation = v;
             }
         }
 
-        if (data.ContainsKey("front_right_wheel_rot")) {
+        if (data.ContainsKey("front_right_wheel_rot"))
+        {
             var value = data["front_right_wheel_rot"];
-            if (value is Vector3 v) {
+            if (value is Vector3 v)
+            {
                 _FrontRightWheel.Rotation = v;
             }
         }

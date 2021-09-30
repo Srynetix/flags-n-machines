@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using SxGD;
 
 public class LevelLimits : Area
 {
@@ -13,28 +14,37 @@ public class LevelLimits : Area
     private Array<Transform> _InitialTransforms = new Array<Transform>();
     private Logging _Logger;
 
-    public LevelLimits() {
+    public LevelLimits()
+    {
         _Logger = Logging.GetLogger("LevelLimits");
     }
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         Connect("body_exited", this, nameof(_OnBodyExited));
 
-        foreach (var path in MonitoredNodes) {
+        foreach (var path in MonitoredNodes)
+        {
             var node = GetNode(path);
-            if (node is Spatial spatial) {
+            if (node is Spatial spatial)
+            {
                 _InitialTransforms.Add(spatial.GlobalTransform);
                 _MonitoredNodeInstances.Add(spatial);
-            } else {
+            }
+            else
+            {
                 _Logger.ErrorM("_Ready", $"Unsupported node type {node}.");
             }
         }
     }
 
-    private void _OnBodyExited(Node node) {
-        if (node is Spatial spatial) {
+    private void _OnBodyExited(Node node)
+    {
+        if (node is Spatial spatial)
+        {
             var index = _MonitoredNodeInstances.IndexOf(spatial);
-            if (index >= 0) {
+            if (index >= 0)
+            {
                 spatial.GlobalTransform = _InitialTransforms[index];
             }
         }

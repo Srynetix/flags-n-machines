@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using SxGD;
 
 public class HostMenu : ColorRect
 {
@@ -31,8 +32,10 @@ public class HostMenu : ColorRect
         var mapsContainer = GetNode<HBoxContainer>("MainMargin/MainRows/MiddleColumn/Parameters/MapSelection/Values");
         _MapButtons = mapsContainer.GetChildren();
 
-        foreach (Button button in _MapButtons) {
-            if (!button.Disabled) {
+        foreach (Button button in _MapButtons)
+        {
+            if (!button.Disabled)
+            {
                 button.Connect("toggled", this, nameof(_SelectMap), new Array { button });
             }
         }
@@ -42,33 +45,42 @@ public class HostMenu : ColorRect
 
     public override void _Notification(int what)
     {
-        if (what == MainLoop.NotificationWmGoBackRequest) {
+        if (what == MainLoop.NotificationWmGoBackRequest)
+        {
             _GoBack();
         }
     }
 
-    private void _GoBack() {
+    private void _GoBack()
+    {
         GetTree().ChangeScene("res://scenes/main-menu/MainMenu.tscn");
     }
 
-    private void _SelectMap(bool toggle_status, Button btn) {
-        if (toggle_status) {
+    private void _SelectMap(bool toggle_status, Button btn)
+    {
+        if (toggle_status)
+        {
             // Reset all other buttons
-            foreach (Button otherBtn in _MapButtons) {
-                if (otherBtn != btn) {
+            foreach (Button otherBtn in _MapButtons)
+            {
+                if (otherBtn != btn)
+                {
                     otherBtn.Pressed = false;
                 }
             }
 
             _SelectedMap = btn.Text;
-        } else if (_SelectedMap == btn.Text) {
+        }
+        else if (_SelectedMap == btn.Text)
+        {
             _SelectedMap = "";
         }
 
         _UpdateForm();
     }
 
-    private void _StartGame() {
+    private void _StartGame()
+    {
         // Update parameters
         CVars.GetInstance().SetVar<int>("host_server_port", int.Parse(_ServerPort.Text));
         CVars.GetInstance().SetVar<int>("host_max_players", int.Parse(_MaxPlayers.Text));
@@ -76,20 +88,27 @@ public class HostMenu : ColorRect
         GetTree().ChangeScene("res://scenes/main-menu/ServerLobby.tscn");
     }
 
-    private void _ValidateLineEdit(string value) {
+    private void _ValidateLineEdit(string value)
+    {
         _UpdateForm();
     }
 
-    private bool _CheckParametersValidation() {
-        if (_SelectedMap != "") {
+    private bool _CheckParametersValidation()
+    {
+        if (_SelectedMap != "")
+        {
             var playersStr = _MaxPlayers.Text;
             var playersInt = 0;
-            if (int.TryParse(playersStr, out playersInt)) {
-                if (playersInt > 0) {
+            if (int.TryParse(playersStr, out playersInt))
+            {
+                if (playersInt > 0)
+                {
                     var portStr = _ServerPort.Text;
                     var portInt = 0;
-                    if (int.TryParse(portStr, out portInt)) {
-                        if (portInt > 0) {
+                    if (int.TryParse(portStr, out portInt))
+                    {
+                        if (portInt > 0)
+                        {
                             return true;
                         }
                     }
@@ -100,7 +119,8 @@ public class HostMenu : ColorRect
         return false;
     }
 
-    private void _UpdateForm() {
+    private void _UpdateForm()
+    {
         _StartButton.Disabled = !_CheckParametersValidation();
     }
 }

@@ -1,4 +1,5 @@
 using Godot;
+using SxGD;
 
 public class MainMenu : ColorRect
 {
@@ -31,22 +32,26 @@ public class MainMenu : ColorRect
         GetTree().SetQuitOnGoBack(true);
     }
 
-    private void _OpenSettingsMenu() {
+    private void _OpenSettingsMenu()
+    {
         GetTree().SetQuitOnGoBack(false);
         GetTree().ChangeScene("res://scenes/main-menu/SettingsMenu.tscn");
     }
 
-    private void _OpenJoinMenu() {
+    private void _OpenJoinMenu()
+    {
         GetTree().SetQuitOnGoBack(false);
         GetTree().ChangeScene("res://scenes/main-menu/JoinMenu.tscn");
     }
 
-    private void _OpenHostMenu() {
+    private void _OpenHostMenu()
+    {
         GetTree().SetQuitOnGoBack(false);
         GetTree().ChangeScene("res://scenes/main-menu/HostMenu.tscn");
     }
 
-    private void _OpenTests() {
+    private void _OpenTests()
+    {
         GetTree().ChangeScene("res://scenes/main-menu/TestsMenu.tscn");
     }
 }

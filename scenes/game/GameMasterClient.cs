@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using SxGD;
 
 public class GameMasterClient : Node
 {
@@ -8,21 +9,26 @@ public class GameMasterClient : Node
     private Car _Car;
     private GameStage _GameNode;
 
-    public GameMasterClient() {
+    public GameMasterClient()
+    {
         _Logger = Logging.GetLogger("GameMasterClient");
     }
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         _RPC = RPCService.GetInstance(GetTree());
         _RPC.Client.Connect(nameof(ClientRPC.SpawnedFromServer), this, nameof(_NodeSpawned));
         _GameNode = GetParent().GetNode<GameStage>("Stage");
     }
 
-    private void _NodeSpawned(Node node) {
+    private void _NodeSpawned(Node node)
+    {
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "_Client_NodeSpawned", node);
 
-        if (node is Car car) {
-            if (car.IsOwnedByCurrentPeer()) {
+        if (node is Car car)
+        {
+            if (car.IsOwnedByCurrentPeer())
+            {
                 car.GetInputController().ShowVirtualControls();
                 _Car = car;
                 _GameNode.ChaseCamera.Target = car;
@@ -32,8 +38,9 @@ public class GameMasterClient : Node
     }
 
     [Remote]
-    public void ReceivePlayerScores(string data) {
-        var scores = ObjectExt.FromJson<Dictionary<int, PlayerData>>(data);
+    public void ReceivePlayerScores(string data)
+    {
+        var scores = NetworkExt.FromJson<Dictionary<int, PlayerData>>(data);
         _Logger.InfoMN(GetTree().GetNetworkUniqueId(), "ReceivePlayerScores", scores);
         _GameNode.ScoresUI.UpdateScores(scores);
     }

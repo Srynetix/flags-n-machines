@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using SxGD;
 
 public class TestNetworking : Spatial
 {
@@ -15,7 +16,8 @@ public class TestNetworking : Spatial
 
     private Dictionary<int, Node> _Cars = new Dictionary<int, Node>();
 
-    public TestNetworking() {
+    public TestNetworking()
+    {
         _Logger = Logging.GetLogger("TestNetworking");
     }
 
@@ -33,11 +35,13 @@ public class TestNetworking : Spatial
         _RPC.Client.Connect(nameof(ClientRPC.SpawnedFromServer), this, nameof(_OnClientNodeSpawned));
     }
 
-    private void _CreateClient() {
+    private void _CreateClient()
+    {
         _ClientButton.Disabled = true;
         _ServerButton.Disabled = true;
 
-        _Client = new ClientPeer() {
+        _Client = new ClientPeer()
+        {
             ServerAddress = "127.0.0.1",
             ServerPort = 12341
         };
@@ -45,12 +49,14 @@ public class TestNetworking : Spatial
         AddChild(_Client);
     }
 
-    private void _CreateServer() {
+    private void _CreateServer()
+    {
         _ClientButton.Disabled = true;
         _ServerButton.Disabled = true;
         _ListenServerButton.Disabled = true;
 
-        _Server = new ServerPeer() {
+        _Server = new ServerPeer()
+        {
             ServerPort = 12341,
             MaxPlayers = 10
         };
@@ -58,42 +64,52 @@ public class TestNetworking : Spatial
         _StartServerGame();
     }
 
-    private void _OnClientConnected() {
+    private void _OnClientConnected()
+    {
         _ListenServerButton.Disabled = true;
     }
 
-    private void _OnClientNodeSpawned(Node node) {
-        if (node is Car car) {
-            if (car.IsOwnedByCurrentPeer()) {
+    private void _OnClientNodeSpawned(Node node)
+    {
+        if (node is Car car)
+        {
+            if (car.IsOwnedByCurrentPeer())
+            {
                 car.GetInputController().ShowVirtualControls();
                 _Camera.Target = car.CameraTarget;
             }
         }
     }
 
-    private void _ServerPeerConnected(int peerId) {
+    private void _ServerPeerConnected(int peerId)
+    {
         _StartClientGame(peerId);
     }
 
-    private void _ServerPeerDisconnected(int peerId) {
-        if (_Cars.ContainsKey(peerId)) {
+    private void _ServerPeerDisconnected(int peerId)
+    {
+        if (_Cars.ContainsKey(peerId))
+        {
             _Server.RemoveSynchronizedNode(_Cars[peerId]);
             _Cars.Remove(peerId);
         }
     }
 
-    private void _CreateListenServer() {
+    private void _CreateListenServer()
+    {
         _ListenServerButton.Disabled = true;
         _ServerButton.Disabled = true;
 
-        var server = new ListenServerPeer() {
+        var server = new ListenServerPeer()
+        {
             ServerPort = 12341,
             MaxPlayers = 10
         };
         AddChild(server);
 
         // Spawn transform on server
-        var scene = new Spatial() {
+        var scene = new Spatial()
+        {
             Name = "TestNetworking"
         };
         server.GetServerRoot().AddChild(scene);
@@ -101,7 +117,8 @@ public class TestNetworking : Spatial
         _StartServerGame();
     }
 
-    private void _StartServerGame() {
+    private void _StartServerGame()
+    {
         _Server.Connect(nameof(ServerPeer.PeerConnected), this, nameof(_ServerPeerConnected));
         _Server.Connect(nameof(ServerPeer.PeerDisconnected), this, nameof(_ServerPeerDisconnected));
 
@@ -115,7 +132,8 @@ public class TestNetworking : Spatial
         limits.Connect(nameof(LevelLimits.OutOfLimits), this, nameof(_NodeOutOfLimits));
     }
 
-    private void _StartClientGame(int peerId) {
+    private void _StartClientGame(int peerId)
+    {
         var car = _Server.SpawnSynchronizedScene<Car>(
             "/root/TestNetworking", "res://scenes/common/Car.tscn",
             masterConfiguration: new Dictionary<NodePath, int> {
@@ -126,9 +144,11 @@ public class TestNetworking : Spatial
         _Cars.Add(peerId, car);
     }
 
-    private void _NodeOutOfLimits(Node node) {
+    private void _NodeOutOfLimits(Node node)
+    {
         _Logger.DebugM("_NodeOutOfLimits", $"Node {node.GetPath()} is out of limits.");
-        if (node is Car car) {
+        if (node is Car car)
+        {
             car.ResetMovement();
             car.Translation = new Vector3();
             car.Rotation = new Vector3();
