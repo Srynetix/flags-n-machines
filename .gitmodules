@@ -10,3 +10,9 @@
 [submodule "addons/debug"]
 	path = addons/debug
 	url = git@github.com:Srynetix/godot-plugin-debug
+[submodule "addons/networkext"]
+	path = addons/networkext
+	url = git@github.com:Srynetix/godot-plugin-networkext
+[submodule "addons/nodeext"]
+	path = addons/nodeext
+	url = git@github.com:Srynetix/godot-plugin-nodeext
