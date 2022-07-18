@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/sxgd/modules/SxFontAwesome/SxFAButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/fonts/OstrichSans-Medium.otf" type="DynamicFontData" id=3]
-[ext_resource path="res://scenes/main-menu/SettingsMenu.cs" type="Script" id=4]
+[ext_resource path="res://scenes/main-menu/SettingsMenu.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 72
@@ -28,9 +28,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.101961, 0.101961, 0.101961, 1 )
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MainMargin" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -49,36 +46,32 @@ custom_constants/separation = 50
 
 [node name="TopColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
 margin_right = 1240.0
-margin_bottom = 96.0
+margin_bottom = 64.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackButton" parent="MainMargin/MainRows/TopColumn" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 96.0
-margin_bottom = 96.0
-Text = "chevron-left"
+icon_name = "chevron-left"
 
 [node name="SettingsTitle" type="Label" parent="MainMargin/MainRows/TopColumn"]
 margin_left = 1028.0
-margin_top = 23.0
+margin_top = 7.0
 margin_right = 1240.0
-margin_bottom = 72.0
+margin_bottom = 56.0
 size_flags_horizontal = 10
 custom_fonts/font = SubResource( 1 )
 text = "Settings"
 
 [node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
-margin_top = 146.0
+margin_top = 114.0
 margin_right = 1240.0
 margin_bottom = 564.0
 size_flags_vertical = 3
 
 [node name="ParameterRows" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn"]
 margin_right = 1240.0
-margin_bottom = 418.0
+margin_bottom = 450.0
 size_flags_horizontal = 3
 
 [node name="PlayerName" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/ParameterRows"]
@@ -89,13 +82,13 @@ custom_constants/separation = 50
 
 [node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName"]
 margin_top = 3.0
-margin_right = 234.0
+margin_right = 227.0
 margin_bottom = 47.0
 custom_fonts/font = SubResource( 2 )
 text = "Player name"
 
 [node name="Input" type="LineEdit" parent="MainMargin/MainRows/MiddleColumn/ParameterRows/PlayerName"]
-margin_left = 284.0
+margin_left = 277.0
 margin_right = 1240.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
@@ -111,7 +104,7 @@ margin_right = 1240.0
 margin_bottom = 680.0
 
 [node name="SaveButton" type="Button" parent="MainMargin/MainRows/BottomColumn"]
-margin_left = 1137.0
+margin_left = 1147.0
 margin_right = 1240.0
 margin_bottom = 66.0
 size_flags_horizontal = 10

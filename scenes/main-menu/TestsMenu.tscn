@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://addons/fontawesome/nodes/IconTouchButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/sxgd/modules/SxFontAwesome/SxFAButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/fonts/OstrichSans-Medium.otf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/fonts/OstrichSans-Heavy.otf" type="DynamicFontData" id=3]
-[ext_resource path="res://addons/fontawesome/resources/FontAwesome32px.tres" type="DynamicFont" id=4]
-[ext_resource path="res://scenes/main-menu/TestsMenu.cs" type="Script" id=5]
+[ext_resource path="res://scenes/main-menu/TestsMenu.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 72
@@ -23,9 +22,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.101961, 0.101961, 0.101961, 1 )
 script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MainMargin" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -44,60 +40,45 @@ custom_constants/separation = 50
 
 [node name="TopColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
 margin_right = 1240.0
-margin_bottom = 96.0
+margin_bottom = 64.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackButton" parent="MainMargin/MainRows/TopColumn" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 96.0
-margin_bottom = 96.0
-Text = "chevron-left"
-
-[node name="Label" type="Label" parent="MainMargin/MainRows/TopColumn/BackButton"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_fonts/font = ExtResource( 4 )
-text = ""
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+icon_name = "chevron-left"
 
 [node name="SettingsTitle" type="Label" parent="MainMargin/MainRows/TopColumn"]
-margin_left = 1099.0
-margin_top = 23.0
+margin_left = 1108.0
+margin_top = 7.0
 margin_right = 1240.0
-margin_bottom = 72.0
+margin_bottom = 56.0
 size_flags_horizontal = 10
 custom_fonts/font = SubResource( 1 )
 text = "TESTS"
 
 [node name="MiddleColumn" type="HBoxContainer" parent="MainMargin/MainRows"]
-margin_top = 146.0
+margin_top = 114.0
 margin_right = 1240.0
 margin_bottom = 680.0
 size_flags_vertical = 3
 
 [node name="Parameters" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn"]
 margin_right = 1240.0
-margin_bottom = 534.0
+margin_bottom = 566.0
 size_flags_horizontal = 3
 custom_constants/separation = 50
 
 [node name="TestSelection" type="VBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters"]
 margin_right = 1240.0
-margin_bottom = 534.0
+margin_bottom = 566.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 50
 
 [node name="Label" type="Label" parent="MainMargin/MainRows/MiddleColumn/Parameters/TestSelection"]
-margin_left = 464.0
-margin_right = 776.0
+margin_left = 467.0
+margin_right = 773.0
 margin_bottom = 49.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 2 )
@@ -106,13 +87,13 @@ text = "Test selection"
 [node name="Values" type="HBoxContainer" parent="MainMargin/MainRows/MiddleColumn/Parameters/TestSelection"]
 margin_top = 99.0
 margin_right = 1240.0
-margin_bottom = 534.0
+margin_bottom = 566.0
 size_flags_vertical = 3
 custom_constants/separation = 50
 
 [node name="Car" type="Button" parent="MainMargin/MainRows/MiddleColumn/Parameters/TestSelection/Values"]
 margin_right = 380.0
-margin_bottom = 435.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )
@@ -122,7 +103,7 @@ text = "Car"
 [node name="Networking" type="Button" parent="MainMargin/MainRows/MiddleColumn/Parameters/TestSelection/Values"]
 margin_left = 430.0
 margin_right = 810.0
-margin_bottom = 435.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )
@@ -132,7 +113,7 @@ text = "Networking"
 [node name="CSG" type="Button" parent="MainMargin/MainRows/MiddleColumn/Parameters/TestSelection/Values"]
 margin_left = 860.0
 margin_right = 1240.0
-margin_bottom = 435.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )

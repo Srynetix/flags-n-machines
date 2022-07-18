@@ -16,3 +16,6 @@
 [submodule "addons/nodeext"]
 	path = addons/nodeext
 	url = git@github.com:Srynetix/godot-plugin-nodeext
+[submodule "addons/sxgd"]
+	path = addons/sxgd
+	url = git@github.com:Srynetix/sxgd
