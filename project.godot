@@ -8,6 +8,55 @@
 
 config_version=4
 
+_global_script_class_icons={
+"ClientLobby": "",
+"ClientPeer": "",
+"ClientRPC": "",
+"HostMenu": "",
+"JoinMenu": "",
+"ListenServerPeer": "",
+"MainMenu": "",
+"ServerLobby": "",
+"ServerPeer": "",
+"ServerRPC": "",
+"SettingsMenu": "",
+"SxAudioMultiStreamPlayer": "",
+"SxBetterBlur": "",
+"SxBuffer": "",
+"SxColor": "",
+"SxDebugInfo": "",
+"SxDebugPanel": "",
+"SxFAButton": "",
+"SxFAFont": "",
+"SxFALabel": "",
+"SxFXCamera": "",
+"SxFadingRichTextLabel": "",
+"SxGameData": "",
+"SxGlobalAudioFxPlayer": "",
+"SxGlobalMusicPlayer": "",
+"SxInput": "",
+"SxJson": "",
+"SxLoadCache": "",
+"SxLog": "",
+"SxLogPanel": "",
+"SxMath": "",
+"SxMotionBlur": "",
+"SxNetwork": "",
+"SxOS": "",
+"SxSceneRunner": "",
+"SxSceneTransitioner": "",
+"SxShader": "",
+"SxShockwave": "",
+"SxText": "",
+"SxTileMap": "",
+"SxVignette": "",
+"SxVirtualButton": "",
+"SxVirtualControls": "",
+"SxVirtualJoystick": "",
+"SyncInput": "",
+"SyncPeerInput": "",
+"TestsMenu": ""
+}
 _global_script_classes=[ {
 "base": "ColorRect",
 "class": "ClientLobby",
@@ -244,55 +293,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/main-menu/TestsMenu.gd"
 } ]
-_global_script_class_icons={
-"ClientLobby": "",
-"ClientPeer": "",
-"ClientRPC": "",
-"HostMenu": "",
-"JoinMenu": "",
-"ListenServerPeer": "",
-"MainMenu": "",
-"ServerLobby": "",
-"ServerPeer": "",
-"ServerRPC": "",
-"SettingsMenu": "",
-"SxAudioMultiStreamPlayer": "",
-"SxBetterBlur": "",
-"SxBuffer": "",
-"SxColor": "",
-"SxDebugInfo": "",
-"SxDebugPanel": "",
-"SxFAButton": "",
-"SxFAFont": "",
-"SxFALabel": "",
-"SxFXCamera": "",
-"SxFadingRichTextLabel": "",
-"SxGameData": "",
-"SxGlobalAudioFxPlayer": "",
-"SxGlobalMusicPlayer": "",
-"SxInput": "",
-"SxJson": "",
-"SxLoadCache": "",
-"SxLog": "",
-"SxLogPanel": "",
-"SxMath": "",
-"SxMotionBlur": "",
-"SxNetwork": "",
-"SxOS": "",
-"SxSceneRunner": "",
-"SxSceneTransitioner": "",
-"SxShader": "",
-"SxShockwave": "",
-"SxText": "",
-"SxTileMap": "",
-"SxVignette": "",
-"SxVirtualButton": "",
-"SxVirtualControls": "",
-"SxVirtualJoystick": "",
-"SyncInput": "",
-"SyncPeerInput": "",
-"TestsMenu": ""
-}
 
 [application]
 
@@ -326,7 +326,7 @@ enabled=PoolStringArray(  )
 
 [engine]
 
-version="3.4.4"
+version="3.5"
 
 [input]
 
