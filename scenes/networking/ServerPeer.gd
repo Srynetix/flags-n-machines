@@ -24,6 +24,7 @@ class SynchronizedScenePath:
 
 var server_port := 0
 var max_players := 0
+var rpc_service: RPCService
 
 var _players := {}
 var _logger := SxLog.get_logger("ServerPeer")
@@ -35,10 +36,10 @@ func _init() -> void:
     _logger.set_max_log_level(SxLog.LogLevel.DEBUG)
 
 func _get_client() -> ClientRPC:
-    return RPCService.client
+    return rpc_service.client
 
 func _get_sync_input() -> SyncInput:
-    return RPCService.sync_input
+    return rpc_service.sync_input
 
 func get_players() -> Dictionary:
     return _players
@@ -46,6 +47,9 @@ func get_players() -> Dictionary:
 func _ready() -> void:
     get_tree().connect("network_peer_connected", self, "_peer_connected")
     get_tree().connect("network_peer_disconnected", self, "_peer_disconnected")
+
+    if rpc_service == null:
+        rpc_service = MainRPCService
 
     var peer = NetworkedMultiplayerENet.new()
     peer.create_server(server_port, max_players)
@@ -107,7 +111,7 @@ func spawn_synchronized_scene(parent: NodePath, scene_path: String, owner_peer_i
     var parent_node := get_node(parent)
     var packed_scene: PackedScene = load(scene_path)
     var child_node := packed_scene.instance()
-    child_node.name = SxNetwork.generate_network_name(name, uuid)
+    child_node.name = uuid
     child_node.set_network_master(owner_peer_id)
     parent_node.add_child(child_node)
 
@@ -117,7 +121,7 @@ func spawn_synchronized_scene(parent: NodePath, scene_path: String, owner_peer_i
 
     _sync_scene_paths[uuid] = SynchronizedScenePath.new(
         uuid,
-        name,
+        uuid,
         parent,
         scene_path,
         owner_peer_id,
@@ -126,7 +130,7 @@ func spawn_synchronized_scene(parent: NodePath, scene_path: String, owner_peer_i
     _sync_nodes[uuid] = child_node
 
     # Send command to all connected clients
-    _get_client().spawn_synchronized_scene_broadcast(parent, name, scene_path, uuid, owner_peer_id, master_configuration)
+    _get_client().spawn_synchronized_scene_broadcast(parent, uuid, scene_path, uuid, owner_peer_id, master_configuration)
     return child_node
 
 func spawn_synchronized_named_scene(parent: NodePath, scene_path: String, scene_name: String, owner_peer_id: int = 1, master_configuration: Dictionary = {}) -> Node:

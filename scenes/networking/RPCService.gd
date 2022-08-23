@@ -1,4 +1,5 @@
 extends Node
+class_name RPCService
 
 var client: ClientRPC
 var server: ServerRPC

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/common/Car.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/common/ChaseCamera.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/tests/LevelLimits.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/game/LevelLimits.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/tests/MapCSG.tscn" type="PackedScene" id=4]
 
 [node name="TestMap" type="Spatial"]
@@ -12,10 +12,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.5931, 0 )
 
 [node name="ChaseCamera" parent="." instance=ExtResource( 2 )]
 v_offset = 2.0
-TargetPath = NodePath("../Car")
+target_path = NodePath("../Car")
 
 [node name="Map" parent="." instance=ExtResource( 4 )]
 
 [node name="LevelLimits" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 119 )
-MonitoredNodes = [ NodePath("../Car") ]

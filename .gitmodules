@@ -1,21 +1,3 @@
-[submodule "addons/fontawesome"]
-	path = addons/fontawesome
-	url = git@github.com:Srynetix/godot-plugin-fontawesome
-[submodule "addons/virtualcontrols"]
-	path = addons/virtualcontrols
-	url = git@github.com:Srynetix/godot-plugin-virtualcontrols
-[submodule "addons/mathext"]
-	path = addons/mathext
-	url = git@github.com:Srynetix/godot-plugin-mathext
-[submodule "addons/debug"]
-	path = addons/debug
-	url = git@github.com:Srynetix/godot-plugin-debug
-[submodule "addons/networkext"]
-	path = addons/networkext
-	url = git@github.com:Srynetix/godot-plugin-networkext
-[submodule "addons/nodeext"]
-	path = addons/nodeext
-	url = git@github.com:Srynetix/godot-plugin-nodeext
 [submodule "addons/sxgd"]
 	path = addons/sxgd
 	url = git@github.com:Srynetix/sxgd

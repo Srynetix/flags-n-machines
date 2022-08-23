@@ -7,9 +7,9 @@ onready var _test_selection: HBoxContainer = $MainMargin/MainRows/MiddleColumn/P
 func _ready() -> void:
     _back_button.connect("pressed", self, "_go_back")
 
-    _test_selection.get_node("Car").connect("pressed", self, "_select_test", [ "TestCar "])
-    _test_selection.get_node("Networking").connect("pressed", self, "_select_test", [ "TestNetworking "])
-    _test_selection.get_node("CSG").connect("pressed", self, "_select_test", [ "TestCSG "])
+    _test_selection.get_node("Car").connect("pressed", self, "_select_test", [ "TestCar" ])
+    _test_selection.get_node("Networking").connect("pressed", self, "_select_test", [ "TestNetworking" ])
+    _test_selection.get_node("CSG").connect("pressed", self, "_select_test", [ "TestCSG" ])
 
 func _notification(what: int) -> void:
     match what:

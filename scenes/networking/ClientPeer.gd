@@ -13,10 +13,10 @@ func _init() -> void:
     _logger.set_max_log_level(SxLog.LogLevel.ERROR)
 
 func _get_sync_input() -> SyncInput:
-    return RPCService.sync_input
+    return MainRPCService.sync_input
 
 func _get_server() -> ServerRPC:
-    return RPCService.server
+    return MainRPCService.server
 
 func _ready() -> void:
     get_tree().connect("network_peer_connected", self, "_peer_connected")

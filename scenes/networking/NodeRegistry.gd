@@ -1,4 +1,5 @@
 extends Node
+class_name NodeRegistry
 
 var _registry := {}
 var _logger := SxLog.get_logger("NodeRegistry")

@@ -12,8 +12,6 @@ func get_current_input() -> SyncPeerInput:
     var my_id = SxNetwork.get_nuid(self)
     if _player_inputs.has(my_id):
         return _player_inputs[my_id]
-
-    _logger.error_m("get_current_input", "No SyncPeerInput for current peer.")
     return null
 
 func create_peer_input(peer_id: int) -> void:
@@ -21,7 +19,7 @@ func create_peer_input(peer_id: int) -> void:
     add_child(input)
 
     _player_inputs[peer_id] = input
-    _logger.debug_m("create_peer_input", "Created peer input for peer '%d'." % peer_id)
+    _logger.debug_mn(SxNetwork.get_nuid(self), "create_peer_input", "Created peer input for peer '%d'." % peer_id)
 
 func remove_peer_input(peer_id: int) -> void:
     if _player_inputs.has(peer_id):
@@ -54,10 +52,9 @@ func get_action_strength(source: Node, action_name: String) -> float:
         if source_id == 1:
             # Do not handle server input
             return 0.0
-        
+
         if _player_inputs.has(source_id):
             return _player_inputs[source_id].get_action_strength(action_name)
         else:
             _logger.error_mn(source_id, "get_action_strength", "No SyncPeerInput for current peer.")
             return 0.0
-        

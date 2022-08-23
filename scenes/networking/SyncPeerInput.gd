@@ -2,7 +2,9 @@ extends Node
 class_name SyncPeerInput
 
 var _input_state := {}
-var _actions := []
+var _actions := [
+    "accelerate", "brake", "steer_left", "steer_right", "jump"
+]
 
 func _init(peer_id: int = 1) -> void:
     name = "SyncPeerInput#%d" % peer_id

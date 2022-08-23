@@ -14,8 +14,8 @@ func _init():
 func link_service(service: Node) -> void:
     _service = service
 
-func _get_server() -> ServerRPC:
-    return _service.server as ServerRPC
+func _get_server():
+    return _service.server
 
 func pong(peer_id: int) -> void:
     var my_id = SxNetwork.get_nuid(self)
@@ -31,7 +31,7 @@ func spawn_synchronized_scene_broadcast(parent: NodePath, name: String, scene_pa
     var my_id = SxNetwork.get_nuid(self)
     _logger.debug_mn(my_id, "spawn_synchronized_scene_broadcast", "Sending scene spawn '%s' named '%s' at parent '%s' with GUID '%s' and owner '%d' to all peers." % [scene_path, name, parent, guid, owner_peer_id])
     rpc("_spawn_synchronized_scene", parent, name, scene_path, guid, owner_peer_id, master_configuration)
-    
+
 func synchronize_node_broadcast(path: NodePath, data: Dictionary) -> void:
     rpc_unreliable("_synchronize_node", path, data)
 
@@ -65,7 +65,7 @@ remote func _spawn_synchronized_scene(parent: NodePath, name: String, scene_path
 
     var my_id = SxNetwork.get_nuid(self)
     _logger.debug_mn(my_id, "_spawn_synchronized_scene", "Spawned scene '%s' at parent '%s' with GUID '%s' and owner '%d'." % [scene_path, parent, guid, owner_peer_id])
-    
+
     emit_signal("spawned_from_server", child_node)
 
 remote func _synchronize_node(path: NodePath, data: Dictionary) -> void:

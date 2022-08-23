@@ -27,15 +27,19 @@ func print_server_tree() -> void:
 func _ready() -> void:
     _scene_tree = SceneTree.new()
     _scene_tree.init()
-    _scene_tree.root.render_target_update_mode = Viewport.UPDATE_DISABLED
+
+    var root := _scene_tree.root
+    root.render_target_update_mode = Viewport.UPDATE_DISABLED
 
     var _rpc = RPCService.new()
-    _scene_tree.root.add_child(_rpc)
+    _rpc.name = "MainRPCService"
+    root.add_child(_rpc)
 
     _server = ServerPeer.new()
     _server.server_port = server_port
     _server.max_players = max_players
-    _scene_tree.root.add_child(_server)
+    _server.rpc_service = _rpc
+    root.add_child(_server)
 
     _logger.debug_m("_ready", "Listen server is ready.")
 

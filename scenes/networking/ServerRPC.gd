@@ -11,8 +11,8 @@ func _init() -> void:
 func link_service(service: Node) -> void:
     _service = service
 
-func _get_client() -> ClientRPC:
-    return _service.client as ClientRPC
+func _get_client():
+    return _service.client
 
 func _get_sync_input() -> SyncInput:
     return _service.sync_input as SyncInput
