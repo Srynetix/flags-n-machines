@@ -15,8 +15,6 @@ _global_script_class_icons={
 "ChaseCamera": "",
 "ClientGame": "",
 "ClientLobby": "",
-"ClientPeer": "",
-"ClientRPC": "",
 "FPSCamera": "",
 "GameMasterClient": "",
 "GameMasterServer": "",
@@ -24,30 +22,30 @@ _global_script_class_icons={
 "HostMenu": "",
 "JoinMenu": "",
 "LevelLimits": "",
-"ListenServerPeer": "",
 "MainMenu": "",
-"NodeRegistry": "",
 "PlayerData": "",
-"RPCService": "",
 "ScoresUI": "",
 "ServerGame": "",
 "ServerLobby": "",
-"ServerPeer": "",
-"ServerRPC": "",
 "SettingsMenu": "",
 "SxArray": "",
 "SxAudioMultiStreamPlayer": "",
 "SxBetterBlur": "",
 "SxBuffer": "",
+"SxClientPeer": "",
+"SxClientRPC": "",
+"SxCmdLineParser": "",
 "SxColor": "",
+"SxContainer": "",
 "SxDebugInfo": "",
-"SxDebugPanel": "",
+"SxDebugTools": "",
 "SxDoubleTap": "",
 "SxFAButton": "",
 "SxFAFont": "",
 "SxFALabel": "",
 "SxFXCamera": "",
 "SxFadingRichTextLabel": "",
+"SxFullScreenAcceptDialog": "",
 "SxFullScreenConfirmationDialog": "",
 "SxFullScreenDialog": "",
 "SxFullScreenFileDialog": "",
@@ -57,21 +55,29 @@ _global_script_class_icons={
 "SxInput": "",
 "SxItemList": "",
 "SxJson": "",
+"SxListenServerPeer": "",
 "SxLoadCache": "",
 "SxLog": "",
 "SxLogPanel": "",
 "SxMath": "",
 "SxMotionBlur": "",
 "SxNetwork": "",
+"SxNode": "",
 "SxNodeTracer": "",
 "SxNodeTracerSystem": "",
 "SxNodeTracerUI": "",
 "SxOS": "",
+"SxRPCService": "",
 "SxRand": "",
 "SxSceneRunner": "",
 "SxSceneTransitioner": "",
+"SxServerPeer": "",
+"SxServerRPC": "",
 "SxShader": "",
 "SxShockwave": "",
+"SxSyncBarrier": "",
+"SxSyncInput": "",
+"SxSyncPeerInput": "",
 "SxText": "",
 "SxTileMap": "",
 "SxUI": "",
@@ -79,8 +85,6 @@ _global_script_class_icons={
 "SxVirtualButton": "",
 "SxVirtualControls": "",
 "SxVirtualJoystick": "",
-"SyncInput": "",
-"SyncPeerInput": "",
 "SynchronizedCar": "",
 "TestsMenu": ""
 }
@@ -114,16 +118,6 @@ _global_script_classes=[ {
 "class": "ClientLobby",
 "language": "GDScript",
 "path": "res://scenes/main-menu/ClientLobby.gd"
-}, {
-"base": "Node",
-"class": "ClientPeer",
-"language": "GDScript",
-"path": "res://scenes/networking/ClientPeer.gd"
-}, {
-"base": "Node",
-"class": "ClientRPC",
-"language": "GDScript",
-"path": "res://scenes/networking/ClientRPC.gd"
 }, {
 "base": "Camera",
 "class": "FPSCamera",
@@ -160,30 +154,15 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/game/LevelLimits.gd"
 }, {
-"base": "Node",
-"class": "ListenServerPeer",
-"language": "GDScript",
-"path": "res://scenes/networking/ListenServerPeer.gd"
-}, {
 "base": "ColorRect",
 "class": "MainMenu",
 "language": "GDScript",
 "path": "res://scenes/main-menu/MainMenu.gd"
 }, {
-"base": "Node",
-"class": "NodeRegistry",
-"language": "GDScript",
-"path": "res://scenes/networking/NodeRegistry.gd"
-}, {
 "base": "Object",
 "class": "PlayerData",
 "language": "GDScript",
 "path": "res://scenes/game/PlayerData.gd"
-}, {
-"base": "Node",
-"class": "RPCService",
-"language": "GDScript",
-"path": "res://scenes/networking/RPCService.gd"
 }, {
 "base": "MarginContainer",
 "class": "ScoresUI",
@@ -199,16 +178,6 @@ _global_script_classes=[ {
 "class": "ServerLobby",
 "language": "GDScript",
 "path": "res://scenes/main-menu/ServerLobby.gd"
-}, {
-"base": "Node",
-"class": "ServerPeer",
-"language": "GDScript",
-"path": "res://scenes/networking/ServerPeer.gd"
-}, {
-"base": "Node",
-"class": "ServerRPC",
-"language": "GDScript",
-"path": "res://scenes/networking/ServerRPC.gd"
 }, {
 "base": "ColorRect",
 "class": "SettingsMenu",
@@ -235,10 +204,30 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/extensions/SxBuffer.gd"
 }, {
+"base": "Node",
+"class": "SxClientPeer",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxClientPeer.gd"
+}, {
+"base": "Node",
+"class": "SxClientRPC",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxClientRPC.gd"
+}, {
+"base": "Node",
+"class": "SxCmdLineParser",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/utils/SxCmdLineParser/SxCmdLineParser.gd"
+}, {
 "base": "Reference",
 "class": "SxColor",
 "language": "GDScript",
 "path": "res://addons/sxgd/extensions/SxColor.gd"
+}, {
+"base": "Reference",
+"class": "SxContainer",
+"language": "GDScript",
+"path": "res://addons/sxgd/extensions/SxContainer.gd"
 }, {
 "base": "CanvasLayer",
 "class": "SxDebugInfo",
@@ -246,9 +235,9 @@ _global_script_classes=[ {
 "path": "res://addons/sxgd/nodes/debug/SxDebugInfo/SxDebugInfo.gd"
 }, {
 "base": "CanvasLayer",
-"class": "SxDebugPanel",
+"class": "SxDebugTools",
 "language": "GDScript",
-"path": "res://addons/sxgd/nodes/debug/SxDebugPanel/SxDebugPanel.gd"
+"path": "res://addons/sxgd/nodes/debug/SxDebugTools/SxDebugTools.gd"
 }, {
 "base": "Node",
 "class": "SxDoubleTap",
@@ -280,7 +269,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/nodes/ui/SxFadingRichTextLabel/SxFadingRichTextLabel.gd"
 }, {
-"base": "Panel",
+"base": "SxFullScreenDialog",
+"class": "SxFullScreenAcceptDialog",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/ui/SxFullScreenAcceptDialog/SxFullScreenAcceptDialog.gd"
+}, {
+"base": "SxFullScreenDialog",
 "class": "SxFullScreenConfirmationDialog",
 "language": "GDScript",
 "path": "res://addons/sxgd/nodes/ui/SxFullScreenConfirmationDialog/SxFullScreenConfirmationDialog.gd"
@@ -326,6 +320,11 @@ _global_script_classes=[ {
 "path": "res://addons/sxgd/extensions/SxJson.gd"
 }, {
 "base": "Node",
+"class": "SxListenServerPeer",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxListenServerPeer.gd"
+}, {
+"base": "Node",
 "class": "SxLoadCache",
 "language": "GDScript",
 "path": "res://addons/sxgd/nodes/utils/SxLoadCache/SxLoadCache.gd"
@@ -355,6 +354,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/extensions/SxNetwork.gd"
 }, {
+"base": "Reference",
+"class": "SxNode",
+"language": "GDScript",
+"path": "res://addons/sxgd/extensions/SxNode.gd"
+}, {
 "base": "Node",
 "class": "SxNodeTracer",
 "language": "GDScript",
@@ -375,6 +379,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/extensions/SxOS.gd"
 }, {
+"base": "Node",
+"class": "SxRPCService",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxRPCService.gd"
+}, {
 "base": "Reference",
 "class": "SxRand",
 "language": "GDScript",
@@ -390,6 +399,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/nodes/utils/SxSceneTransitioner/SxSceneTransitioner.gd"
 }, {
+"base": "Node",
+"class": "SxServerPeer",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxServerPeer.gd"
+}, {
+"base": "Node",
+"class": "SxServerRPC",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxServerRPC.gd"
+}, {
 "base": "Reference",
 "class": "SxShader",
 "language": "GDScript",
@@ -399,6 +418,21 @@ _global_script_classes=[ {
 "class": "SxShockwave",
 "language": "GDScript",
 "path": "res://addons/sxgd/nodes/fx/screen-effects/SxShockwave/SxShockwave.gd"
+}, {
+"base": "Node",
+"class": "SxSyncBarrier",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxSyncBarrier.gd"
+}, {
+"base": "Node",
+"class": "SxSyncInput",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxSyncInput.gd"
+}, {
+"base": "Node",
+"class": "SxSyncPeerInput",
+"language": "GDScript",
+"path": "res://addons/sxgd/nodes/networking/SxSyncPeerInput.gd"
 }, {
 "base": "Reference",
 "class": "SxText",
@@ -435,16 +469,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/sxgd/modules/SxVirtualControls/SxVirtualJoystick.gd"
 }, {
-"base": "Node",
-"class": "SyncInput",
-"language": "GDScript",
-"path": "res://scenes/networking/SyncInput.gd"
-}, {
-"base": "Node",
-"class": "SyncPeerInput",
-"language": "GDScript",
-"path": "res://scenes/networking/SyncPeerInput.gd"
-}, {
 "base": "Spatial",
 "class": "SynchronizedCar",
 "language": "GDScript",
@@ -467,10 +491,10 @@ config/quit_on_go_back=false
 [autoload]
 
 CVars="*res://autoloads/CVars.gd"
-PlayerContext="*res://autoloads/PlayerContext.gd"
+GameCmdLineParser="*res://autoloads/GameCmdLineParser.gd"
 GameDebugPanel="*res://autoloads/GameDebugPanel.tscn"
 MainRPCService="*res://autoloads/MainRPCService.gd"
-MainNodeRegistry="*res://autoloads/MainNodeRegistry.gd"
+PlayerContext="*res://autoloads/PlayerContext.gd"
 
 [debug]
 
@@ -489,7 +513,7 @@ enabled=PoolStringArray(  )
 
 [engine]
 
-version="3.5"
+version="3.5.1"
 
 [input]
 
@@ -542,3 +566,7 @@ quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
 environment/default_environment="res://default_env.tres"
+
+[sxgd]
+
+networking/sync_peer_input_actions=PoolStringArray( "accelerate", "brake", "steer_left", "steer_right", "jump" )

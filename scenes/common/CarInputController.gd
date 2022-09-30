@@ -17,7 +17,7 @@ func show_virtual_controls() -> void:
     _virtual_controls.visible = true
 
 func _physics_process(_delta: float) -> void:
-    var sync_input := MainRPCService.sync_input as SyncInput
+    var sync_input := MainRPCService.sync_input as SxSyncInput
     if SxNetwork.is_network_server(get_tree()):
         steer_left = sync_input.get_action_strength(self, "steer_left")
         steer_right = sync_input.get_action_strength(self, "steer_right")

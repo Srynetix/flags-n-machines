@@ -10,14 +10,14 @@ enum GameMasterState {
 
 var _logger := SxLog.get_logger("GameMasterServer")
 var _state := GameMasterState.WAITING_FIRST_PLAYER as int
-var _server_peer: ServerPeer
+var _server_peer: SxServerPeer
 var _cars := {}
 var _player_data := {}
 
 func _ready() -> void:
     _logger.info_m("_ready", "GameMasterServer is ready.")
 
-    _server_peer = MainNodeRegistry.get_node_from_registry("server") as ServerPeer
+    _server_peer = get_parent().get_parent().get_node("SxServerPeer")
     _server_peer.connect("peer_connected", self, "_peer_connected")
     _server_peer.connect("peer_disconnected", self, "_peer_disconnected")
     _server_peer.spawn_synchronized_named_scene(

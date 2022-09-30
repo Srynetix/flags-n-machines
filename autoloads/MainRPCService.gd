@@ -1,1 +1,1 @@
-extends RPCService
+extends SxRPCService

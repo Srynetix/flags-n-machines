@@ -5,8 +5,8 @@ onready var _server_button := $GUI/Container/Server as Button
 onready var _listen_server_button := $GUI/Container/ListenServer as Button
 onready var _camera := $ChaseCamera as ChaseCamera
 
-var _server_peer: ServerPeer
-var _client_peer: ClientPeer
+var _server_peer: SxServerPeer
+var _client_peer: SxClientPeer
 var _cars := {}
 var _logger := SxLog.get_logger("TestNetworking")
 
@@ -20,7 +20,7 @@ func _ready() -> void:
 func _create_client() -> void:
     _client_button.disabled = true
     _server_button.disabled = true
-    _client_peer = ClientPeer.new()
+    _client_peer = SxClientPeer.new()
     _client_peer.server_address = "127.0.0.1"
     _client_peer.server_port = 12341
     _client_peer.connect("connected_to_server", self, "_on_client_connected")
@@ -31,7 +31,7 @@ func _create_server() -> void:
     _server_button.disabled = true
     _listen_server_button.disabled = true
 
-    _server_peer = ServerPeer.new()
+    _server_peer = SxServerPeer.new()
     _server_peer.server_port = 12341
     _server_peer.max_players = 10
     add_child(_server_peer)
@@ -59,7 +59,7 @@ func _create_listen_server() -> void:
     _listen_server_button.disabled = true
     _server_button.disabled = true
 
-    var server = ListenServerPeer.new()
+    var server = SxListenServerPeer.new()
     server.server_port = 12341
     server.max_players = 10
     add_child(server)
