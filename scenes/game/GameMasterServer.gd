@@ -20,11 +20,13 @@ func _ready() -> void:
     _server_peer = get_parent().get_parent().get_node("SxServerPeer")
     _server_peer.connect("peer_connected", self, "_peer_connected")
     _server_peer.connect("peer_disconnected", self, "_peer_disconnected")
-    _server_peer.spawn_synchronized_named_scene(
+    var stage = _server_peer.spawn_synchronized_named_scene(
         "/root/Game",
         "res://scenes/game/GameStage.tscn",
         "Stage"
     )
+    var limits := _server_peer.spawn_synchronized_scene(stage.get_path(), "res://scenes/game/LevelLimits.tscn") as LevelLimits
+    limits.connect("out_of_limits", self, "_node_out_of_limits")
 
     # Load player scores
     var players := _server_peer.get_players()

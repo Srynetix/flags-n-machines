@@ -16,7 +16,7 @@ var max_car_steering_limit := 0.085
 var slip_speed := 15.0
 var traction_slow := 0.75
 var traction_fast := 0.02
-var jump_force := 8.0
+var jump_force := 7.0
 var air_control_velocity := 10.0
 var air_control_steer_velocity := 10.0
 
